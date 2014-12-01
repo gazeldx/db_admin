@@ -7,14 +7,11 @@ Support many popular database like Postgersql, Mysql, Sqlite, Oracle, MSSql serv
     $ cd ruby-db-admin
     $ bundle install
 
-modify the line 
-    DB = Sequel.connect('postgres://user:password@host:port/database_name')
-in `ruby db_admin.rb`. 
+modify the line `DB = Sequel.connect('postgres://user:password@host:port/database_name')` in `ruby db_admin.rb`. 
 
     $ ruby db_admin.rb
     
-Then you can visit http://localhost:4567/ now!
-
+Then you can visit [http://localhost:4567/](http://localhost:4567/) now!
 
 ## TODO
 Add link to row columns which are integer to filter the related datas.(Like where)
