@@ -6,7 +6,7 @@ A Sequel and Sinatra project.
     $ cd ruby-db-admin
     $ bundle install
 
-modify the line `DB = Sequel.connect('postgres://user:password@host:port/database_name')` in `ruby db_admin.rb`. 
+Follow [Sequel#getting-started](https://github.com/jeremyevans/sequel#getting-started), modify the line `DB = Sequel.connect('postgres://user:password@host:port/database_name')` in `ruby db_admin.rb`. 
 
     $ ruby db_admin.rb
     
