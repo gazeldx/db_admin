@@ -1,0 +1,3 @@
+gem 'sequel'
+
+gem 'sinatra'

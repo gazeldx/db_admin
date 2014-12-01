@@ -1,0 +1,31 @@
+<% if @dataset.any? %>
+  <div class="row">
+    <div class="col-sm-12">
+      <div>
+        <ul class="pagination pull-right">
+          <li class="disabled">
+              <span>
+                <%= @dataset.page_size * (@dataset.current_page - 1) + 1 %> - <%= @dataset.current_page == @dataset.page_count ? @dataset.pagination_record_count : @dataset.current_page * @dataset.page_size %>, total <%= @dataset.pagination_record_count %>
+              </span>
+          </li>
+
+          <li <%= (@dataset.current_page <= 1) ? 'class="disabled"' : '' %>>
+            <a href="<%= (@dataset.current_page <= 1) ? '#' : "#{request.path_info}?page=#{@dataset.current_page - 1}" %>"><</a>
+          </li>
+
+          <% @dataset.page_count.times do |page| %>
+            <li <%= (@dataset.current_page == page + 1) ? 'class="active"' : '' %>>
+              <a href="<%= (@dataset.current_page == page + 1) ? '#' : "#{request.path_info}?page=#{page + 1}" %>">
+                <%= page + 1 %>
+              </a>
+            </li>
+          <% end %>
+
+          <li <%= (@dataset.current_page >= @dataset.page_count) ? 'class="disabled"' : '' %>>
+            <a href="<%= (@dataset.current_page >= @dataset.page_count) ? '#' : "#{request.path_info}?page=#{@dataset.current_page + 1}" %>">></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+<% end %>
