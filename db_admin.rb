@@ -2,8 +2,8 @@ require 'sequel'
 require 'sinatra'
 require 'sinatra/reloader' if development? #NOTICE: If you want to modify something for your customized purpose, you need remove the "#" of this line. Then you can see the result immediately. Otherwise you need to stop the WEBrick and run `$ ruby db_admin.rb` again.
 
-DB = Sequel.connect('postgres://user:password@host:port/database_name')
-# DB = Sequel.connect('postgres://lane:password@localhost:5432/ucweb_development')
+# DB = Sequel.connect('postgres://user:password@host:port/database_name')
+DB = Sequel.connect('postgres://lane:password@localhost:5432/ucweb_development')
 
 enable :sessions
 
