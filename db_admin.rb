@@ -1,6 +1,6 @@
 require 'sequel'
 require 'sinatra'
-require 'sinatra/reloader' if development? #NOTICE: If you want to modify something for your customized purpose, you need remove the "#" of this line. Then you can see the result immediately. Otherwise you need to stop the WEBrick and run `$ ruby db_admin.rb` again.
+# require 'sinatra/reloader' if development? #NOTICE: If you want to modify something for your customized purpose, you need remove the "#" of this line. Then you can see the result immediately. Otherwise you need to stop the WEBrick and run `$ ruby db_admin.rb` again.
 
 
 RURY_DB_ADMIN = Sequel.sqlite('ruby_db_admin.db')
