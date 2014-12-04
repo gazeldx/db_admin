@@ -2,8 +2,12 @@ require 'sequel'
 require 'sinatra'
 require 'sinatra/reloader' if development? #NOTICE: If you want to modify something for your customized purpose, you need remove the "#" of this line. Then you can see the result immediately. Otherwise you need to stop the WEBrick and run `$ ruby db_admin.rb` again.
 
+
+RURY_DB_ADMIN = Sequel.sqlite('ruby_db_admin.db')
+DB = RURY_DB_ADMIN
+# DB = Sequel.connect('sqlite://ruby_db_admin.db') # ./ruby_db_admin.db
 # DB = Sequel.connect('postgres://user:password@host:port/database_name')
-DB = Sequel.connect('postgres://lane:password@localhost:5432/ucweb_development')
+# DB = Sequel.connect('postgres://lane:password@localhost:5432/ucweb_development')
 
 enable :sessions
 
@@ -12,8 +16,9 @@ get '/' do
 end
 
 get '/tables/:table_name' do
-  @dataset = DB[params[:table_name].to_sym].extension(:pagination)\
-               .paginate((params[:page] || 1).to_i, 10, record_count=nil)
+  @dataset = DB[params[:table_name].to_sym]
+  # @dataset = DB[params[:table_name].to_sym].extension(:pagination)\
+  #              .paginate((params[:page] || 1).to_i, 10, record_count=nil)
   erb :table
 end
 

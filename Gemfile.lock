@@ -1,4 +1,5 @@
 GEM
+  remote: https://ruby.taobao.org/
   specs:
     rack (1.5.2)
     rack-protection (1.5.3)
