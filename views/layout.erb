@@ -1,49 +1,47 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
     <title>Database Admin by Ruby</title>
 
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href='/css/bootstrap.min.css' rel='stylesheet'>
   </head>
 
   <body>
-    <div class="container">
+    <div class='container'>
       <div>
         <h1>Ruby Database Admin</h1>
       </div>
 
-      <div class="row">
-        <div class="col-sm-2">
-          <div class="sidebar-module">
+      <div class='row'>
+        <div class='col-sm-2'>
+          <div class='sidebar-module'>
             <h4>Tables</h4>
-            <ol class="list-unstyled">
+            <ol class='list-unstyled'>
               <% DB.tables.sort.each do |table_name| %>
                 <li><a href="/tables/<%= table_name %>"><%= table_name %></a></li>
               <% end %>
             </ol>
           </div>
 
-          <% if DB.views.any? %>
-            <div class="sidebar-module">
-              <h4>Views</h4>
-              <ol class="list-unstyled">
-                <% DB.views.each do |view_name| %>
-                  <li><a href="/views/<%= view_name %>"><%= view_name %></a></li>
-                <% end %>
-              </ol>
-            </div>
-          <% end %>
+          <div class='sidebar-module'>
+            <h4>Views</h4>
+            <ol class='list-unstyled'>
+              <% DB.views.each do |view_name| %>
+                <li><a href="/views/<%= view_name %>"><%= view_name %></a></li>
+              <% end %>
+            </ol>
+          </div>
         </div><!-- /.blog-sidebar -->
 
-        <div class="col-sm-10 blog-main">
+        <div class='col-sm-10 blog-main'>
           <%= yield %>
         </div><!-- /.blog-main -->
       </div><!-- /.row -->
     </div><!-- /.container -->
 
-    <script src="/js/jquery.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
+    <script src='/js/jquery.min.js'></script>
+    <script src='/js/bootstrap.min.js'></script>
   </body>
 </html>

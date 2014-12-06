@@ -5,6 +5,10 @@ A Sequel and Sinatra project.
 ~~~
 $ git@github.com:gazeldx/ruby-db-admin.git
 $ cd ruby-db-admin
+~~~
+
+You should installed your database driver gem first. For example, if you use Postgresql you need `$ gem install pg` or put `gem 'pg'` to Gemfile.
+~~~
 $ bundle install
 ~~~
 

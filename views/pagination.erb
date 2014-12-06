@@ -1,9 +1,9 @@
 <% if @dataset.any? %>
-  <div class="row">
-    <div class="col-sm-12">
+  <div class='row'>
+    <div class='col-sm-12'>
       <div>
-        <ul class="pagination pull-right">
-          <li class="disabled">
+        <ul class='pagination pull-right'>
+          <li class='disabled'>
               <span>
                 <%= @dataset.page_size * (@dataset.current_page - 1) + 1 %> - <%= @dataset.current_page == @dataset.page_count ? @dataset.pagination_record_count : @dataset.current_page * @dataset.page_size %>, total <%= @dataset.pagination_record_count %>
               </span>

@@ -2,7 +2,6 @@ require 'sequel'
 require 'sinatra'
 # require 'sinatra/reloader' if development? #NOTICE: If you want to modify something for your customized purpose, you need remove the "#" of this line. Then you can see the result immediately. Otherwise you need to stop the WEBrick and run `$ ruby db_admin.rb` again.
 
-
 DB = RURY_DB_ADMIN = Sequel.sqlite('ruby_db_admin.db') # ./ruby_db_admin.db
 # DB = Sequel.connect('postgres://user:password@host:port/database_name')
 # DB = Sequel.connect('postgres://lane:password@localhost:5432/ucweb_development')
@@ -13,10 +12,11 @@ get '/' do
   erb :index
 end
 
+# TODO: '/tables/:table_name/' and '/tables/:table_name' all route to this.
 get '/tables/:table_name' do
-  @dataset = DB[params[:table_name].to_sym]
-  # @dataset = DB[params[:table_name].to_sym].extension(:pagination)\
-  #              .paginate((params[:page] || 1).to_i, 10, record_count=nil)
+  @schema = DB.schema(params[:table_name].to_sym)
+  @dataset = DB[params[:table_name].to_sym].extension(:pagination)\
+               .paginate((params[:page] || 1).to_i, 10, record_count=nil)
   erb :table
 end
 
@@ -42,10 +42,6 @@ delete '/tables/:table_name/drop' do
 end
 
 helpers do
-  def say_hello(value)
-    "#{DB.tables.inspect}hello #{value}"
-  end
-
   def notice_info
     result = ''
     if session[:notice]
