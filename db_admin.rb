@@ -69,6 +69,13 @@ put '/tables/:table_name/:id/:column_name' do
   }.to_json
 end
 
+post '/execute_sql' do
+  result = DB.run params[:sql]
+
+  content_type :json
+  { result: result }.to_json
+end
+
 helpers do
   def notice_info
     result = ''

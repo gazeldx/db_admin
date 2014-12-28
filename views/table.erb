@@ -13,6 +13,8 @@
 
           <a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-expanded='false'>Operations <span class='caret'></span></a>
           <ul class='dropdown-menu' role='menu'>
+            <li><a href='#' onclick='show_sql_panel.call(this)'>Execute SQL</a></li>
+            <li class='divider'></li>
             <li><a href='#' onclick='show_insert_panel.call(this)'>Insert</a></li>
             <li class='divider'></li>
             <li><a href='#' onclick="$('#panel_form').attr('action', '<%= "#{request.path_info}/delete_all"%>');$('#panel_form').submit();">Delete All</a></li>
@@ -26,6 +28,35 @@
 
 
   <div class='panel-body'>
+    <div id='sql_panel' style='display: none'>
+      <%
+         values = ''
+         @schema.each do |column|
+           unless [:id, :created_at, :updated_at].include?(column[0])
+             values += "#{column[0].to_s}: ''"
+             values += "\n" unless column == @schema.last
+           end
+         end
+      %>
+      Please input SQL below:
+      <br>
+      <textarea id='sql' cols='140' rows='4'></textarea>
+      <br>
+      <button type='button' class='btn btn-success' onclick="execute_sql()">Execute</button>
+      <br>
+      We haven't support SELECT yet.
+      <br>
+      Examples:
+      <br>
+      &nbsp;&nbsp;&nbsp;&nbsp;CREATE TABLE albums (id integer primary key, name varchar(255))
+      <br>
+      &nbsp;&nbsp;&nbsp;&nbsp;ALTER TABLE albums ADD COLUMN copies_sold INTEGER
+      <br>
+      &nbsp;&nbsp;&nbsp;&nbsp;TODO: Automatic generate SQL for this specific table with update and delete SQL here.
+      <br>
+      <br>
+    </div>
+
     <div id='insert_panel' style='display: none'>
       <%
          values = ''
@@ -44,6 +75,7 @@
       <br>
       <br>
     </div>
+
     <% unless @schema.nil? %>
       <a href='#' onclick="$('#schema').toggle();">Schema</a>
 
@@ -51,7 +83,7 @@
         <b>Columns</b>
         <br>
         <% @schema.each do |column| %>
-          <%= "&nbsp;&nbsp;&nbsp;&nbsp;<span class='text-danger'>#{column[0]}</span> <span class='text-primary'>#{column[1][:db_type]}</span>, <span class='text-warning'>#{column[1][:primary_key] ? 'primary_key,' : ''}</span> #{column[1][:allow_null] ? '' : 'not null,'}  <span class='text-success'>#{column[1][:default] ? "default: #{column[1][:default]}" : ''}</span> " %>
+          <%= "&nbsp;&nbsp;&nbsp;&nbsp;<span class='text-danger'>#{column[0]}</span> <span class='text-primary'>#{column[1][:db_type]}</span> <span class='text-warning'>#{column[1][:primary_key] ? 'primary_key' : ''}</span> #{column[1][:allow_null] ? '' : 'not null'}  <span class='text-success'>#{column[1][:default] ? "default: #{column[1][:default]}" : ''}</span> " %>
           <br>
         <% end %>
 
@@ -166,6 +198,25 @@
             },
             error: function() {
               alert('Insert failed!');
+            }
+          });
+        }
+
+        function show_sql_panel() {
+          $('#sql_panel').show();
+          $('#schema').show();
+        }
+
+        function execute_sql() {
+          $.ajax({
+            url: "/execute_sql",
+            data: 'sql=' + $('#sql').val(),
+            type: 'POST',
+            success: function(data) {
+              alert("Your SQL has been executed.\nThe result is " + data['result'] + '.');
+            },
+            error: function() {
+              alert('Your SQL executed failed!');
             }
           });
         }
