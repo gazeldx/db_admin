@@ -1,5 +1,5 @@
 ## Ruby Database Admin
-A Sequel and Sinatra project.
+A Sequel and Sinatra project. [Demo](http://ruby-db-admin.coding.io/)
 
 ## Installation
 ~~~

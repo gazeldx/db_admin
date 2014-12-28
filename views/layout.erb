@@ -4,8 +4,10 @@
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <title>Database Admin by Ruby</title>
-
     <link href='/css/bootstrap.min.css' rel='stylesheet'>
+
+    <script src='/js/jquery.min.js'></script>
+    <script src='/js/bootstrap.min.js'></script>
   </head>
 
   <body>
@@ -24,7 +26,7 @@
               <% end %>
             </ol>
           </div>
-
+          <hr>
           <div class='sidebar-module'>
             <h4>Views</h4>
             <ol class='list-unstyled'>
@@ -33,15 +35,12 @@
               <% end %>
             </ol>
           </div>
-        </div><!-- /.blog-sidebar -->
+        </div>
 
         <div class='col-sm-10 blog-main'>
           <%= yield %>
-        </div><!-- /.blog-main -->
-      </div><!-- /.row -->
-    </div><!-- /.container -->
-
-    <script src='/js/jquery.min.js'></script>
-    <script src='/js/bootstrap.min.js'></script>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

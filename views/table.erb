@@ -3,19 +3,20 @@
 <div class='panel panel-default'>
   <div class='panel-heading'>
     <h3 class='panel-title'>
-      <%= params[:table_name] %>
+      :<%= params[:table_name] %>
 
-      <span class='pull-right'>
-        <form id='panel_form' method='post'>
-          <input type='hidden' name='_method' value='delete' />
-        </form>
+      <span style='list-style: none'>
+        <li class="dropdown pull-right">
+          <form id='panel_form' method='post' style='display: none'>
+            <input type='hidden' name='_method' value='delete' />
+          </form>
 
-        <li class='dropdown' style='display: block;'>
-          <a href='#' class='dropdown-toggle' data-toggle='dropdown' aria-expanded='true'>Destroy <span class='caret'></span></a>
-
+          <a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-expanded='false'>Operations <span class='caret'></span></a>
           <ul class='dropdown-menu' role='menu'>
-            <li><a href='#' onclick="$('#panel_form').attr('action', '<%= "#{request.path_info}/delete_all"%>');$('#panel_form').submit();">Delete All Data</a></li>
-            <li><a href='#' onclick="$('#panel_form').attr('action', '<%= "#{request.path_info}/truncate"%>');$('#panel_form').submit();">Truncate Table</a></li>
+            <li><a href='#' onclick='show_insert_panel.call(this)'>Insert</a></li>
+            <li class='divider'></li>
+            <li><a href='#' onclick="$('#panel_form').attr('action', '<%= "#{request.path_info}/delete_all"%>');$('#panel_form').submit();">Delete All</a></li>
+            <li><a href='#' onclick="$('#panel_form').attr('action', '<%= "#{request.path_info}/truncate"%>');$('#panel_form').submit();">Truncate</a></li>
             <li><a href='#' onclick="$('#panel_form').attr('action', '<%= "#{request.path_info}/drop"%>');$('#panel_form').submit();">Drop Table</a></li>
           </ul>
         </li>
@@ -23,32 +24,57 @@
     </h3>
   </div>
 
-  <% unless @schema.nil? %>
-    <div class='panel-body'>
-      <a href='#'>Schema</a>
+
+  <div class='panel-body'>
+    <div id='insert_panel' style='display: none'>
+      <%
+         values = ''
+         @schema.each do |column|
+           unless [:id, :created_at, :updated_at].include?(column[0])
+             values += "#{column[0].to_s}: ''"
+             values += "\n" unless column == @schema.last
+           end
+         end
+      %>
+      INSERT INTO :<%= params[:table_name] %> VALUES
       <br>
-      <b>Columns</b>
+      <textarea id='values' cols='140' rows='<%= @schema.size %>'><%= values %></textarea>
       <br>
-      <% @schema.each do |column| %>
-        <%= "&nbsp;&nbsp;&nbsp;&nbsp;<span class='text-danger'>#{column[0]}</span> <span class='text-primary'>#{column[1][:db_type]}</span>, <span class='text-warning'>#{column[1][:primary_key] ? 'primary_key,' : ''}</span> #{column[1][:allow_null] ? '' : 'not null,'}  <span class='text-success'>#{column[1][:default] ? "default: #{column[1][:default]}" : ''}</span> " %>
-        <br>
-      <% end %>
-      <b>Indexes</b>
+      <button type='button' class='btn btn-success' onclick="insert_one()">Submit</button>
       <br>
-      <% DB.indexes(params[:table_name]).each do |index_name, index_details| %>
-        <%= "&nbsp;&nbsp;&nbsp;&nbsp;<span class='text-danger'>#{index_name}</span> <span class='text-success'>columns: #{index_details[:columns]}</span> " %>
-        <% index_details.delete(:columns) %>
-        <% index_details.each do |k, v| %>
-          <%= "#{k}: #{v}" if v %>
-        <% end %>
-        <br>
-      <% end %>
+      <br>
     </div>
-  <% end %>
+    <% unless @schema.nil? %>
+      <a href='#' onclick="$('#schema').toggle();">Schema</a>
+
+      <div id='schema' style="display: none;">
+        <b>Columns</b>
+        <br>
+        <% @schema.each do |column| %>
+          <%= "&nbsp;&nbsp;&nbsp;&nbsp;<span class='text-danger'>#{column[0]}</span> <span class='text-primary'>#{column[1][:db_type]}</span>, <span class='text-warning'>#{column[1][:primary_key] ? 'primary_key,' : ''}</span> #{column[1][:allow_null] ? '' : 'not null,'}  <span class='text-success'>#{column[1][:default] ? "default: #{column[1][:default]}" : ''}</span> " %>
+          <br>
+        <% end %>
+
+        <b>Indexes</b>
+        <br>
+        <% DB.indexes(params[:table_name]).each do |index_name, index_details| %>
+          <%= "&nbsp;&nbsp;&nbsp;&nbsp;<span class='text-danger'>#{index_name}</span> <span class='text-default'>columns: #{index_details[:columns]}</span> " %>
+          <% index_details.delete(:columns) %>
+          <% index_details.each do |k, v| %>
+            <%= "#{k}: #{v}" if v %>
+          <% end %>
+          <br>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
 
   <table class='table'>
     <thead>
-      <% @dataset.columns.each do |column| %>
+      <% @dataset.columns.each_with_index do |column, i| %>
+        <% if i == 0 %>
+          <th></th>
+        <% end %>
         <th>
           <%= column %>
         </th>
@@ -56,15 +82,97 @@
     </thead>
 
     <tbody>
-      <% @dataset.each do |row| %>
-        <tr>
-          <% @dataset.columns.each_with_index do |column, i| %>
-            <td>
-              <%= row[column].is_a?(String) ? long_string_become_short(row[column]) : row[column] %>
+      <% @dataset.each_with_index do |row, row_num| %>
+        <tr id='tr<%= row_num %>' onmouseover='show_delete_button.call(this)' onmouseout='hide_delete_button.call(this)'>
+          <% @dataset.columns.each_with_index do |column, column_num| %>
+            <% if column_num == 0 && row[:id] %>
+              <td width='40px' id='<%= row[:id] %>'>
+                <a href='#_' onclick='delete_this_row.call(this)' style='display: none' title='Delete this row' data-url=<%= "/tables/#{params[:table_name]}/delete_one/#{row[:id]}" %>>Del</a>
+              </td>
+            <% end %>
+            <td id=<%= "td_#{row_num}_#{column_num}" %>>
+              <span title="<%= row[column] %>">
+                <%= row[column].is_a?(String) ? long_string_become_short(row[column]) : row[column] %>
+              </span>
+              <% unless row[:id].nil? %>
+                <a style='display: none;' href='#' onclick='save_this_data.call(this)' data-url=<%= "/tables/#{params[:table_name]}/#{row[:id]}/#{column}" %>>Save</a>
+              <% end %>
+              <input type='text' value="<%= row[column] %>" style='display: none;' />
             </td>
           <% end %>
         </tr>
       <% end %>
+
+      <script>
+        $('.table').on('dblclick', 'span', function() {
+          $(this).closest('td').find('span').hide();
+          $(this).closest('td').find(':text').show();
+          $(this).closest('td').find(':text').select();
+          $(this).closest('td').find('a').show();
+        });
+
+        function save_this_data() {
+          $.ajax({
+            url: $(this).attr('data-url'),
+            data: 'new_value=' + $(this).closest('td').find(':text').val() + '&td_id=' + $(this).closest('td').attr('id'),
+            type: 'PUT',
+            success: function(data) {
+              $('#' + data['td_id']).find(':text').hide();
+              $('#' + data['td_id']).find('a').hide();
+              $('#' + data['td_id']).find('span').show();
+              $('#' + data['td_id']).find('span').attr('title', 'Save success! The original data before update is \n' + $('#' + data['td_id']).find('span').attr('title'));
+              $('#' + data['td_id']).find('span').html(data['new_value']);
+            },
+            error: function() {
+              alert('Save failed!');
+            }
+          });
+        }
+
+        function delete_this_row() {
+          $.ajax({
+            url: $(this).attr('data-url'),
+            type: 'DELETE',
+            success: function(data) {
+              $('#' + data['id']).closest('tr').hide();
+            },
+            error: function() {
+              alert('Delete failed!');
+            }
+          });
+        }
+
+        function show_delete_button() {
+          $(this).find('td:first a').show();
+        }
+
+        function hide_delete_button() {
+          $(this).find('td:first a').hide();
+        }
+
+        function show_insert_panel() {
+          $('#insert_panel').show();
+          $('#schema').show();
+        }
+
+        function insert_one() {
+          $.ajax({
+            url: "/tables/<%= params[:table_name] %>/insert_one",
+            data: 'values=' + $('#values').val(),
+            type: 'POST',
+            success: function(data) {
+              alert("Insert success! Please refresh page manually.\nThe newly added data['id'] is " + data['id'] + '.');
+            },
+            error: function() {
+              alert('Insert failed!');
+            }
+          });
+        }
+
+        function show_full_content() {
+          $(this).closest('span').html($(this).closest('span').attr('title'));
+        }
+      </script>
     </tbody>
   </table>
 
