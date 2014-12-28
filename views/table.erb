@@ -90,9 +90,10 @@
                 <a href='#_' onclick='delete_this_row.call(this)' style='display: none' title='Delete this row' data-url=<%= "/tables/#{params[:table_name]}/delete_one/#{row[:id]}" %>>Del</a>
               </td>
             <% end %>
+
             <td id=<%= "td_#{row_num}_#{column_num}" %>>
               <span title="<%= row[column] %>">
-                <%= row[column].is_a?(String) ? long_string_become_short(row[column]) : row[column] %>
+                <%= show_column_text(row, column) %>
               </span>
               <% unless row[:id].nil? %>
                 <a style='display: none;' href='#' onclick='save_this_data.call(this)' data-url=<%= "/tables/#{params[:table_name]}/#{row[:id]}/#{column}" %>>Save</a>

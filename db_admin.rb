@@ -6,7 +6,6 @@ require 'sinatra'
 
 DB = RURY_DB_ADMIN = Sequel.sqlite('ruby_db_admin.db') # ./ruby_db_admin.db
 # DB = Sequel.connect('postgres://user:password@host:port/database_name')
-# DB = Sequel.connect('postgres://lane:password@localhost:5432/ucweb_development')
 
 enable :sessions
 
@@ -80,11 +79,25 @@ helpers do
     result
   end
 
+  def show_column_text(row, column)
+    row[column].is_a?(String) ? long_string_become_short(row[column]) : column_text(row[column])
+  end
+
+  private
+
   def long_string_become_short(string_value)
     if string_value.to_s.size > 33
       "#{string_value[0..30]}<a href='#' onclick='show_full_content.call(this)' title='Click to show full content'>...</a>"
     else
-      string_value
+      column_text(string_value)
+    end
+  end
+
+  def column_text(value)
+    if value.to_s.strip == ''
+      '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+    else
+      value
     end
   end
 end
