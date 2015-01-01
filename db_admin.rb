@@ -1,8 +1,7 @@
 require 'sequel'
 require 'json'
 require 'sinatra'
-# require 'sinatra/reloader' if development? #NOTICE: If you want to modify something for your customized purpose, you need remove the "#" of this line. And also comment off the line of "gem 'sinatra-reloader'" in Gemfile. Then you can see the result immediately. Otherwise you need to stop the WEBrick and run `$ ruby db_admin.rb` again.
-
+# require 'sinatra/reloader' if development? #NOTICE: For debug, you need uncomment this line and "gem 'sinatra-reloader'" in Gemfile.
 
 DB = RURY_DB_ADMIN = Sequel.sqlite('ruby_db_admin.db') # ./ruby_db_admin.db
 # DB = Sequel.connect('postgres://user:password@host:port/database_name')
@@ -77,6 +76,17 @@ post '/execute_sql' do
 end
 
 helpers do
+  def database_name
+    begin
+      if /{.*}/.match(DB.inspect)
+        eval(/{.*}/.match(DB.inspect)[0])[:database]
+      else
+        /.*\/(.*)">$/.match(DB.inspect)[1]
+      end
+    rescue
+    end
+  end
+
   def notice_info
     result = ''
     if session[:notice]

@@ -1,0 +1,23 @@
+<% unless @schema.nil? %>
+  <a href='#' onclick="$('#schema').toggle();">Schema</a>
+
+  <div id='schema' style="display: none;">
+    <b>Columns</b>
+    <br>
+    <% @schema.each do |column| %>
+      <%= "&nbsp;&nbsp;&nbsp;&nbsp;<span class='text-danger'>#{column[0]}</span> <span class='text-primary'>#{column[1][:db_type]}</span> <span class='text-warning'>#{column[1][:primary_key] ? 'primary_key' : ''}</span> #{column[1][:allow_null] ? '' : 'not null'}  <span class='text-success'>#{column[1][:default] ? "default: #{column[1][:default]}" : ''}</span> " %>
+      <br>
+    <% end %>
+
+    <b>Indexes</b>
+    <br>
+    <% DB.indexes(params[:table_name]).each do |index_name, index_details| %>
+      <%= "&nbsp;&nbsp;&nbsp;&nbsp;<span class='text-danger'>#{index_name}</span> <span class='text-default'>columns: #{index_details[:columns]}</span> " %>
+      <% index_details.delete(:columns) %>
+      <% index_details.each do |k, v| %>
+        <%= "#{k}: #{v}" if v %>
+      <% end %>
+      <br>
+    <% end %>
+  </div>
+<% end %>

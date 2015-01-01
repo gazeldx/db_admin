@@ -1,0 +1,18 @@
+<span style='list-style: none'>
+  <li class="dropdown pull-right">
+    <form id='panel_form' method='post' style='display: none'>
+      <input type='hidden' name='_method' value='delete' />
+    </form>
+
+    <a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-expanded='false'>Operations <span class='caret'></span></a>
+    <ul class='dropdown-menu' role='menu'>
+      <li><a href='#' onclick='show_sql_panel.call(this)'>Execute SQL</a></li>
+      <li class='divider'></li>
+      <li><a href='#' onclick='show_insert_panel.call(this)'>Insert</a></li>
+      <li class='divider'></li>
+      <li><a href='#' onclick="$('#panel_form').attr('action', '<%= "#{request.path_info}/delete_all"%>');$('#panel_form').submit();">Delete All</a></li>
+      <li><a href='#' onclick="$('#panel_form').attr('action', '<%= "#{request.path_info}/truncate"%>');$('#panel_form').submit();">Truncate</a></li>
+      <li><a href='#' onclick="$('#panel_form').attr('action', '<%= "#{request.path_info}/drop"%>');$('#panel_form').submit();">Drop Table</a></li>
+    </ul>
+  </li>
+</span>

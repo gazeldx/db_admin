@@ -1,0 +1,38 @@
+<div id='insert_panel' style='display: none'>
+  <%
+     values = ''
+     @schema.each do |column|
+       unless [:id, :created_at, :updated_at].include?(column[0])
+         values += "#{column[0].to_s}: ''"
+         values += "\n" unless column == @schema.last
+       end
+     end
+  %>
+  INSERT INTO :<%= params[:table_name] %> VALUES
+  <br>
+  <textarea id='values' cols='140' rows='<%= @schema.size %>'><%= values %></textarea>
+  <br>
+  <button type='button' class='btn btn-success' onclick="insert_one()">Submit</button>
+  <br>
+  <br>
+</div>
+<script>
+  function show_insert_panel() {
+    $('#insert_panel').show();
+    $('#schema').show();
+  }
+
+  function insert_one() {
+    $.ajax({
+      url: "/tables/<%= params[:table_name] %>/insert_one",
+      data: 'values=' + $('#values').val(),
+      type: 'POST',
+      success: function(data) {
+        alert("Insert success! Please refresh page manually.\nThe newly added data['id'] is " + data['id'] + '.');
+      },
+      error: function() {
+        alert('Insert failed!');
+      }
+    });
+  }
+</script>

@@ -1,0 +1,88 @@
+<table class='table'>
+  <thead>
+  <% @dataset.columns.each_with_index do |column, i| %>
+    <% if i == 0 %>
+      <th></th>
+    <% end %>
+    <th>
+      <%= column %>
+    </th>
+  <% end %>
+  </thead>
+
+  <tbody>
+  <% @dataset.each_with_index do |row, row_num| %>
+    <tr id='tr<%= row_num %>' onmouseover='show_delete_button.call(this)' onmouseout='hide_delete_button.call(this)'>
+      <% @dataset.columns.each_with_index do |column, column_num| %>
+        <% if column_num == 0 && row[:id] %>
+          <td width='40px' id='<%= row[:id] %>'>
+            <a href='#_' onclick='delete_this_row.call(this)' style='display: none' title='Delete this row' data-url=<%= "/tables/#{params[:table_name]}/delete_one/#{row[:id]}" %>>Del</a>
+          </td>
+        <% end %>
+
+        <td id=<%= "td_#{row_num}_#{column_num}" %>>
+              <span title="<%= row[column] %>">
+                <%= show_column_text(row, column) %>
+              </span>
+          <% unless row[:id].nil? %>
+            <a style='display: none;' href='#' onclick='save_this_data.call(this)' data-url=<%= "/tables/#{params[:table_name]}/#{row[:id]}/#{column}" %>>Save</a>
+          <% end %>
+          <input type='text' value="<%= row[column] %>" style='display: none;' />
+        </td>
+      <% end %>
+    </tr>
+  <% end %>
+
+  <script>
+    $('.table').on('dblclick', 'span', function() {
+      $(this).closest('td').find('span').hide();
+      $(this).closest('td').find(':text').show();
+      $(this).closest('td').find(':text').select();
+      $(this).closest('td').find('a').show();
+    });
+
+    function save_this_data() {
+      $.ajax({
+        url: $(this).attr('data-url'),
+        data: 'new_value=' + $(this).closest('td').find(':text').val() + '&td_id=' + $(this).closest('td').attr('id'),
+        type: 'PUT',
+        success: function(data) {
+          $('#' + data['td_id']).find(':text').hide();
+          $('#' + data['td_id']).find('a').hide();
+          $('#' + data['td_id']).find('span').show();
+          $('#' + data['td_id']).find('span').attr('title', 'Save success! The original data before update is \n' + $('#' + data['td_id']).find('span').attr('title'));
+          $('#' + data['td_id']).find('span').html(data['new_value']);
+        },
+        error: function() {
+          alert('Save failed!');
+        }
+      });
+    }
+
+    function delete_this_row() {
+      $.ajax({
+        url: $(this).attr('data-url'),
+        type: 'DELETE',
+        success: function(data) {
+          $('#' + data['id']).closest('tr').hide();
+        },
+        error: function() {
+          alert('Delete failed!');
+        }
+      });
+    }
+
+    function show_delete_button() {
+      $(this).find('td:first a').show();
+    }
+
+    function hide_delete_button() {
+      $(this).find('td:first a').hide();
+    }
+
+    function show_full_content() {
+      $(this).closest('span').html($(this).closest('span').attr('title'));
+    }
+  </script>
+  </tbody>
+</table>
