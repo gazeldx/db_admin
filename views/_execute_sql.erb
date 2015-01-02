@@ -29,10 +29,10 @@
       data: 'sql=' + $('#sql').val(),
       type: 'POST',
       success: function(data) {
-        alert("Your SQL has been executed.\nThe result is " + data['result'] + '.');
+        alert('Your SQL executed successfully. ' + (data['result'] == null ? '' : "\nThe result is " + data['result'] + '.'));
       },
-      error: function() {
-        alert('Your SQL executed failed!');
+      error: function(jqXHR) {
+        alert('SQL executed failed!\n' + $.parseJSON(jqXHR.responseText)['message']);
       }
     });
   }

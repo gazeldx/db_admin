@@ -28,10 +28,10 @@
       data: 'values=' + $('#values').val(),
       type: 'POST',
       success: function(data) {
-        alert("Insert success! Please refresh page manually.\nThe newly added data['id'] is " + data['id'] + '.');
+        alert("Insert success!\nThe newly added data['id'] is " + data['id'] + '.\n' + 'Please refresh page manually.');
       },
-      error: function() {
-        alert('Insert failed!');
+      error: function(jqXHR) {
+        alert('Insert failed!\n' + $.parseJSON(jqXHR.responseText)['message']);
       }
     });
   }

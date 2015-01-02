@@ -3,7 +3,7 @@ require 'json'
 require 'sinatra'
 # require 'sinatra/reloader' if development? #NOTICE: For debug, you need uncomment this line and "gem 'sinatra-reloader'" in Gemfile.
 
-DB = RURY_DB_ADMIN = Sequel.sqlite('ruby_db_admin.db') # ./ruby_db_admin.db
+DB = Sequel.sqlite('ruby_db_admin.db') # ./ruby_db_admin.db
 # DB = Sequel.connect('postgres://user:password@host:port/database_name')
 
 enable :sessions
@@ -22,13 +22,19 @@ get '/tables/:table_name' do
 end
 
 post '/tables/:table_name/insert_one' do
-  values = params[:values].gsub(/\r\n/, '\n').gsub(/(\n)+/, ',')
-  values = values[0..values.size - 2] if values[values.size - 1] == ','
-
-  id = DB[params[:table_name].to_sym].insert(eval("{#{values}}"))
-
   content_type :json
-  { id: id }.to_json
+
+  begin
+    values = params[:values].gsub(/\r\n/, '\n').gsub(/(\n)+/, ',')
+    values = values[0..values.size - 2] if values[values.size - 1] == ','
+
+    id = DB[params[:table_name].to_sym].insert(eval("{#{values}}"))
+
+    { id: id }.to_json
+  rescue Exception => exception
+    status 500
+    { message: exception.message }.to_json
+  end
 end
 
 delete '/tables/:table_name/delete_one/:id' do
@@ -60,19 +66,41 @@ delete '/tables/:table_name/drop' do
 end
 
 put '/tables/:table_name/:id/:column_name' do
-  DB[params[:table_name].to_sym].where(id: params[:id]).update(params[:column_name].to_sym => params[:new_value])
-
   content_type :json
-  { new_value: (params[:column_name] == 'id' ? params[:new_value] : DB[params[:table_name].to_sym].first(id: params[:id])[params[:column_name].to_sym]),
-    td_id:     params[:td_id]
-  }.to_json
+
+  begin
+    DB[params[:table_name].to_sym].where(id: params[:id]).update(params[:column_name].to_sym => params[:new_value])
+
+    { new_value: (params[:column_name] == 'id' ? params[:new_value] : DB[params[:table_name].to_sym].first(id: params[:id])[params[:column_name].to_sym]),
+      td_id:     params[:td_id]
+    }.to_json
+  rescue Exception => exception
+    status 500
+    { message: exception.message }.to_json
+  end
 end
 
 post '/execute_sql' do
-  result = DB.run params[:sql]
-
   content_type :json
-  { result: result }.to_json
+
+  begin
+    result = DB.run params[:sql]
+
+    { result: result }.to_json
+  rescue Exception => exception
+    status 500
+    { message: exception.message }.to_json
+  end
+end
+
+get '/belongs_to_table_find/:table_name/:id' do
+  content_type :json
+  begin
+    DB[params[:table_name].to_sym].first(id: params[:id]).merge(table_name: ":#{params[:table_name]}", rand_id: params[:rand_id]).to_json
+  rescue
+    status 500
+    { table_name: ":#{params[:table_name]}", rand_id: params[:rand_id], id: params[:id] }.to_json
+  end
 end
 
 helpers do
@@ -97,10 +125,35 @@ helpers do
   end
 
   def show_column_text(row, column)
-    row[column].is_a?(String) ? long_string_become_short(row[column]) : column_text(row[column])
+    if row[column].is_a?(Integer) && belongs_to_table(column)
+      rand_id = rand(100000000)
+      "<li class='dropdown' style='list-style: none'>
+         <a href='#' onclick='belongs_to_table_find.call(this)' data-rand-id=#{rand_id} data-url='/belongs_to_table_find/#{belongs_to_table(column)}/#{row[column]}' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-expanded='false' title='Click to show relation data'>
+           #{row[column]}
+         </a>
+         <ul id='ul_belongs_to_#{rand_id}' class='dropdown-menu' role='menu'>Searching...</ul>
+       </li>"
+    else
+      row[column].is_a?(String) ? long_string_become_short(row[column]) : column_text(row[column])
+    end
   end
 
   private
+
+  def belongs_to_table(column_name)
+    match_data = column_name.to_s.match(/(.*)_id$/)
+    if match_data
+      begin
+        if DB.table_exists?("#{match_data[1]}s")# TODO: should match all conditions. company => companies.
+          return "#{match_data[1]}s"
+        elsif DB.table_exists?("#{match_data[1]}")
+          return "#{match_data[1]}"
+        end
+      rescue
+      end
+    end
+    nil
+  end
 
   def long_string_become_short(string_value)
     if string_value.to_s.size > 33

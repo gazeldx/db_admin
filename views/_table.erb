@@ -21,12 +21,14 @@
         <% end %>
 
         <td id=<%= "td_#{row_num}_#{column_num}" %>>
-              <span title="<%= row[column] %>">
-                <%= show_column_text(row, column) %>
-              </span>
+          <span title="<%= row[column] %>">
+            <%= show_column_text(row, column) %>
+          </span>
+
           <% unless row[:id].nil? %>
             <a style='display: none;' href='#' onclick='save_this_data.call(this)' data-url=<%= "/tables/#{params[:table_name]}/#{row[:id]}/#{column}" %>>Save</a>
           <% end %>
+
           <input type='text' value="<%= row[column] %>" style='display: none;' />
         </td>
       <% end %>
@@ -53,8 +55,8 @@
           $('#' + data['td_id']).find('span').attr('title', 'Save success! The original data before update is \n' + $('#' + data['td_id']).find('span').attr('title'));
           $('#' + data['td_id']).find('span').html(data['new_value']);
         },
-        error: function() {
-          alert('Save failed!');
+        error: function(jqXHR) {
+          alert('Save failed!\n' + $.parseJSON(jqXHR.responseText)['message']);
         }
       });
     }
@@ -82,6 +84,27 @@
 
     function show_full_content() {
       $(this).closest('span').html($(this).closest('span').attr('title'));
+    }
+
+    function belongs_to_table_find() {
+      $.ajax({
+        url: $(this).attr('data-url'),
+        data: 'rand_id=' + $(this).attr('data-rand-id'),
+        success: function(data) {
+          var result = '';
+          $.each(data, function(k, v) {
+            if ($.inArray(k, ['rand_id', 'table_name']) == -1) {
+              result += (k + ': ' + v + '<br>');
+            }
+          });
+          $('#ul_belongs_to_' + data['rand_id']).html(data['table_name'] + '<br>' + result);
+        },
+        error: function(jqXHR) {
+          var data = $.parseJSON(jqXHR.responseText);
+          $('#ul_belongs_to_' + data['rand_id']).html('id=3 not found in ' + data['table_name'] + ' !');
+          $('#ul_belongs_to_' + data['rand_id']).addClass('text-danger');
+        }
+      });
     }
   </script>
   </tbody>
