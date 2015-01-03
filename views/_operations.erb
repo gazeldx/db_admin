@@ -10,9 +10,9 @@
       <li class='divider'></li>
       <li><a href='#' onclick='show_insert_panel.call(this)'>Insert</a></li>
       <li class='divider'></li>
-      <li><a href='#' onclick="$('#panel_form').attr('action', '<%= "#{request.path_info}/delete_all"%>');$('#panel_form').submit();">Delete All</a></li>
-      <li><a href='#' onclick="$('#panel_form').attr('action', '<%= "#{request.path_info}/truncate"%>');$('#panel_form').submit();">Truncate</a></li>
-      <li><a href='#' onclick="$('#panel_form').attr('action', '<%= "#{request.path_info}/drop"%>');$('#panel_form').submit();">Drop Table</a></li>
+      <li><a href='#' onclick="$('#panel_form').attr('action', '<%= "#{request.path_info}/delete_all"%>'); if (confirm('Are you sure?')) { $('#panel_form').submit(); }">Delete All</a></li>
+      <li><a href='#' onclick="$('#panel_form').attr('action', '<%= "#{request.path_info}/truncate"%>'); if (confirm('Are you sure?')) { $('#panel_form').submit(); }">Truncate</a></li>
+      <li><a href='#' onclick="$('#panel_form').attr('action', '<%= "#{request.path_info}/drop"%>'); if (confirm('Are you sure?')) { $('#panel_form').submit(); }">Drop Table</a></li>
     </ul>
   </li>
 </span>

@@ -5,7 +5,7 @@
     <b>Columns</b>
     <br>
     <% @schema.each do |column| %>
-      <%= "&nbsp;&nbsp;&nbsp;&nbsp;<span class='text-danger'>#{column[0]}</span> <span class='text-primary'>#{column[1][:db_type]}</span> <span class='text-warning'>#{column[1][:primary_key] ? 'primary_key' : ''}</span> #{column[1][:allow_null] ? '' : 'not null'}  <span class='text-success'>#{column[1][:default] ? "default: #{column[1][:default]}" : ''}</span> " %>
+      <%= "&nbsp;&nbsp;&nbsp;&nbsp;<span class='text-danger'>#{column_name_with_belongs_to(column[0])}</span> <span class='text-primary'>#{column[1][:db_type]}</span> <span class='text-warning'>#{column[1][:primary_key] ? 'primary_key' : ''}</span> #{column[1][:allow_null] ? '' : 'not null'}  <span class='text-success'>#{column[1][:default] ? "default: #{column[1][:default]}" : ''}</span> " %>
       <br>
     <% end %>
 

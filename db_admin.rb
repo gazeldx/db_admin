@@ -111,7 +111,16 @@ helpers do
       else
         /.*\/(.*)">$/.match(DB.inspect)[1]
       end
-    rescue
+    rescue Exception => exception
+      puts exception.message
+    end
+  end
+
+  def column_name_with_belongs_to(column_name)
+    if belongs_to_table(column_name)
+      "<a href='/tables/#{belongs_to_table(column_name)}'>#{column_name[0..column_name.size - 4]}</a>_id"
+    else
+      column_name
     end
   end
 
@@ -126,7 +135,7 @@ helpers do
 
   def show_column_text(row, column)
     if row[column].is_a?(Integer) && belongs_to_table(column)
-      rand_id = rand(100000000)
+      rand_id = rand(1000000000)
       "<li class='dropdown' style='list-style: none'>
          <a href='#' onclick='belongs_to_table_find.call(this)' data-rand-id=#{rand_id} data-url='/belongs_to_table_find/#{belongs_to_table(column)}/#{row[column]}' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-expanded='false' title='Click to show relation data'>
            #{row[column]}
@@ -143,13 +152,19 @@ helpers do
   def belongs_to_table(column_name)
     match_data = column_name.to_s.match(/(.*)_id$/)
     if match_data
+      table = match_data[1]
       begin
-        if DB.table_exists?("#{match_data[1]}s")# TODO: should match all conditions. company => companies.
-          return "#{match_data[1]}s"
-        elsif DB.table_exists?("#{match_data[1]}")
-          return "#{match_data[1]}"
+        if DB.table_exists?("#{table}es")
+          return "#{table}es"
+        elsif DB.table_exists?("#{table[0..table.size - 2]}ies")
+          return "#{table[0..(table.size - 2)]}ies"
+        elsif DB.table_exists?("#{table}s")
+          return "#{table}s"
+        elsif DB.table_exists?("#{table}")
+          return "#{table}"
         end
-      rescue
+      rescue Exception => exception
+        puts exception.message
       end
     end
     nil
