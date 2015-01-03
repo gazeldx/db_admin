@@ -1,5 +1,4 @@
 /.idea
 /temp
 .DS_Store
-Gemfile.lock
 pg.rb
