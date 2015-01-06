@@ -1,12 +1,24 @@
 require 'sequel'
 require 'json'
 require 'sinatra'
-# require 'sinatra/reloader' if development? #NOTICE: For debug, you need uncomment this line and "gem 'sinatra-reloader'" in Gemfile.
 
-DB = Sequel.sqlite('ruby_db_admin.db') # ./ruby_db_admin.db
-# DB = Sequel.connect('postgres://user:password@host:port/database_name')
+# require 'sinatra/reloader' if development? 
+#NOTICE: For debug, you need uncomment this line and "gem 'sinatra-reloader'" in Gemfile.
 
+#DB = Sequel.sqlite('ruby_db_admin.db') # ./ruby_db_admin.db
+#DB = Sequel.connect('postgres://user:password@host:port/database_name')
+
+db_hash = {:adapter => 'mysql2', :user => 'root', :host => 'localhost', 
+  :database => 'shortdoc_development',:password=>''}
+DB = Sequel.connect(db_hash)
+    
 enable :sessions
+
+get '/set_db' do
+  db_hash[:database] = params[:database]
+  DB = Sequel.connect(db_hash)
+  redirect '/'
+end
 
 get '/' do
   erb :index
