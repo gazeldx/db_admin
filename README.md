@@ -1,14 +1,26 @@
-## Ruby Database Admin for MySQL
-A Sequel and Sinatra project. [原始项目的Demo](http://ruby-db-admin.coding.io/)
+## Ruby Database Admin
+A Sequel and Sinatra project. [Demo](http://ruby-db-admin.coding.io/)
 
-## 安装
+## Installation
+~~~
+$ git clone git@github.com:gazeldx/ruby-db-admin.git
+$ cd ruby-db-admin
+~~~
 
-参考原始项目：https://github.com/gazeldx/ruby-db-admin
+You should installed your database driver gem first. For example, if you use Postgresql you need `$ gem install pg` or put `gem 'pg'` to Gemfile.
+~~~
+$ bundle install
+~~~
 
-调整了界面，默认支持mysql。
+Follow [Sequel](https://github.com/jeremyevans/sequel#getting-started), modify the line `DB = Sequel.connect('postgres://user:password@host:port/database_name')` in `ruby db_admin.rb`.
+~~~
+$ ruby db_admin.rb
+~~~
+Then you can visit [http://localhost:4567/](http://localhost:4567/) now!
 
-- 可以切换数据库
-- 切换数据库类型，目前需要修改代码。
+## Contributing
+
+If you'd like to help improve ruby-db-admin, clone and pull requests! We love you do it.
 
 ## License
 

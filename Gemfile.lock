@@ -1,7 +1,6 @@
 GEM
-  remote: https://ruby.taobao.org/
+  remote: http://rubygems.org/
   specs:
-    mysql2 (0.3.17)
     rack (1.5.2)
     rack-protection (1.5.3)
       rack
@@ -17,7 +16,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  mysql2
   sequel
   sinatra
   sqlite3
