@@ -5,6 +5,7 @@ require 'sinatra'
 
 DB = Sequel.sqlite('ruby_db_admin.db') # ./ruby_db_admin.db
 # DB = Sequel.connect('postgres://user:password@host:port/database_name')
+# DB = Sequel.connect({ adapter: 'mysql2', user: 'user', password: '', host: 'host', database: 'database_name' })
 
 enable :sessions
 
