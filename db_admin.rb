@@ -4,8 +4,10 @@ require 'sinatra'
 # require 'sinatra/reloader' if development? #NOTICE: For debug, you need uncomment this line and "gem 'sinatra-reloader'" in Gemfile.
 
 DB = Sequel.sqlite('ruby_db_admin.db') # ./ruby_db_admin.db
-# DB = Sequel.connect('postgres://user:password@host:port/database_name')
-# DB = Sequel.connect({ adapter: 'mysql2', user: 'user', password: '', host: 'host', database: 'database_name' })
+# DB = Sequel.connect({ adapter: 'postgres', user: 'user', password: '', host: 'host', port: 5432, database: 'database_name' }) # host can be IP or host_name.
+# DB = Sequel.connect({ adapter: 'mysql2',   user: 'user', password: '', host: 'host', database: 'database_name' }) # adapter can also be 'postgres', 'sqlite', 'oracle', 'sqlanywhere', 'db2', 'informix' etc. We will use default port if port is nil.
+
+set :bind, '0.0.0.0'
 
 enable :sessions
 
@@ -22,19 +24,29 @@ get '/tables/:table_name' do
   erb :table
 end
 
+post '/connect_another_db' do
+  begin
+    another_db = Sequel.connect(connect_hash)
+    DB = another_db if another_db.test_connection
+  rescue Sequel::Error::AdapterNotFound => e
+    session[:error] = "#{e.message} \n Maybe you need install the database driver gem first.\n We suggest you read the 'Gemfile' of 'ruby-db-admin'.\n Then you will know how to install the driver gem."
+  rescue Exception => e
+    session[:error] = e.message
+  end
+
+  redirect '/'
+end
+
 post '/tables/:table_name/insert_one' do
   content_type :json
 
   begin
-    values = params[:values].gsub(/\r\n/, '\n').gsub(/(\n)+/, ',')
-    values = values[0..values.size - 2] if values[values.size - 1] == ','
-
-    id = DB[params[:table_name].to_sym].insert(eval("{#{values}}"))
+    id = DB[params[:table_name].to_sym].insert(textarea_value_to_hash(params[:values]))
 
     { id: id }.to_json
-  rescue Exception => exception
+  rescue Exception => e
     status 500
-    { message: exception.message }.to_json
+    { message: e.message }.to_json
   end
 end
 
@@ -75,9 +87,9 @@ put '/tables/:table_name/:id/:column_name' do
     { new_value: (params[:column_name] == 'id' ? params[:new_value] : DB[params[:table_name].to_sym].first(id: params[:id])[params[:column_name].to_sym]),
       td_id:     params[:td_id]
     }.to_json
-  rescue Exception => exception
+  rescue Exception => e
     status 500
-    { message: exception.message }.to_json
+    { message: e.message }.to_json
   end
 end
 
@@ -88,14 +100,15 @@ post '/execute_sql' do
     result = DB.run params[:sql]
 
     { result: result }.to_json
-  rescue Exception => exception
+  rescue Exception => e
     status 500
-    { message: exception.message }.to_json
+    { message: e.message }.to_json
   end
 end
 
 get '/belongs_to_table_find/:table_name/:id' do
   content_type :json
+
   begin
     DB[params[:table_name].to_sym].first(id: params[:id]).merge(table_name: ":#{params[:table_name]}", rand_id: params[:rand_id]).to_json
   rescue
@@ -108,13 +121,27 @@ helpers do
   def database_name
     begin
       if /{.*}/.match(DB.inspect)
-        eval(/{.*}/.match(DB.inspect)[0])[:database]
+        db_hash[:database]
       else
         /.*\/(.*)">$/.match(DB.inspect)[1]
       end
-    rescue Exception => exception
-      puts exception.message
+    rescue Exception => e
+      puts e.message
     end
+  end
+
+  def database_adapter
+    # begin
+    #   if /{.*}/.match(DB.inspect)
+    #     adapter_hash[(db_hash[:adapter]).to_s]
+    #   else
+    #     adapter_hash[/^.*::Database: "(.*):\/\//.match(DB.inspect)[1]]
+    #   end
+    # rescue Exception => e
+    #   puts e.message
+    # end
+
+    adapter_hash[DB.database_type]
   end
 
   def column_name_with_belongs_to(column_name)
@@ -125,11 +152,16 @@ helpers do
     end
   end
 
-  def notice_info
+  def notice_error
     result = ''
     if session[:notice]
       result = "<div class='alert alert-success' role='alert'>#{session[:notice]}</div>"
       session[:notice] = nil
+    end
+
+    if session[:error]
+      result = "<div class='alert alert-danger' role='alert'>#{session[:error]}</div>"
+      session[:error] = nil
     end
     result
   end
@@ -147,7 +179,7 @@ helpers do
       row[column].is_a?(String) ? long_string_become_short(row[column]) : column_text(row[column])
     end
   end
-
+  
   private
 
   def belongs_to_table(column_name)
@@ -164,8 +196,8 @@ helpers do
         elsif DB.table_exists?("#{table}")
           return "#{table}"
         end
-      rescue Exception => exception
-        puts exception.message
+      rescue Exception => e
+        puts e.message
       end
     end
     nil
@@ -186,4 +218,24 @@ helpers do
       value
     end
   end
+
+  def adapter_hash
+    { :sqlite => 'SQLite', :postgres => 'PostgreSQL', :mysql2 => 'MySQL', :oracle => 'Oracle', :sqlanywhere => 'SQL Anywhere' }
+  end
+end
+
+private
+
+def textarea_value_to_hash(textarea_value)
+  hash = textarea_value.gsub(/(\r)+/, '').gsub(/(\n)+/, ',')
+  hash = hash[0..hash.size - 2] if hash[hash.size - 1] == ','
+  eval("{#{hash}}")
+end
+
+def connect_hash
+  textarea_value_to_hash(params[:connect_hash]).merge(adapter: params[:adapter])
+end
+
+def db_hash
+  eval(/{.*}/.match(DB.inspect)[0])
 end

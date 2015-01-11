@@ -10,8 +10,8 @@
   %>
   INSERT INTO :<%= params[:table_name] %> VALUES
   <br>
-  <textarea id='values' cols='140' rows='<%= @schema.size %>'><%= values %></textarea>
-  <br>
+  <textarea id='values' cols='140' rows='<%= @schema.size %>' class='form-control'><%= values %></textarea>
+
   <button type='button' class='btn btn-success' onclick="insert_one()">Submit</button>
   <br>
   <br>

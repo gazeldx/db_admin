@@ -1,3 +1,4 @@
+# This file is used for create the database ./ruby_db_admin.db
 require 'sequel'
 
 RUBY_DB_ADMIN = Sequel.sqlite('ruby_db_admin.db')
