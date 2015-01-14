@@ -8,11 +8,11 @@ $ cd ruby-db-admin
 ~~~
 
 Read [Gemfile](./Gemfile) to install your database driver gem. Then
-~~~shell
+~~~bash
 $ bundle install
 $ ruby db_admin.rb
 ~~~
-Visit [http://localhost:4567](http://localhost:4567/) .
+Visit [http://localhost:4567](http://localhost:4567/)
 
 ## Contributing
 
