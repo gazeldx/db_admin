@@ -3,7 +3,8 @@ require 'json'
 require 'sinatra'
 # require 'sinatra/reloader' if development? #NOTICE: For debug, you need uncomment this line and "gem 'sinatra-reloader'" in Gemfile.
 
-DB = Sequel.sqlite('ruby_db_admin.db') # ./ruby_db_admin.db
+DBs = []
+# DB = Sequel.sqlite('ruby_db_admin.db') # ./ruby_db_admin.db
 # DB = Sequel.connect({ adapter: 'postgres', user: 'user', password: '', host: 'host', port: 5432, database: 'database_name' }) # host can be IP or host_name.
 # DB = Sequel.connect({ adapter: 'mysql2',   user: 'user', password: '', host: 'host', database: 'database_name' }) # adapter can also be 'postgres', 'sqlite', 'oracle', 'sqlanywhere', 'db2', 'informix' etc. We will use default port if port is nil.
 
@@ -12,7 +13,11 @@ set :bind, '0.0.0.0'
 enable :sessions
 
 get '/' do
-  erb :index
+  erb :index, layout: :index
+end
+
+get '/home' do
+  erb :home
 end
 
 get '/tables/:table_name' do
@@ -27,15 +32,29 @@ end
 post '/connect_another_db' do
   begin
     another_db = Sequel.connect(connect_hash)
-    DB = another_db if another_db.test_connection
+    if another_db.test_connection
+      DB = another_db
+      DBs << DB
+    end
   rescue Sequel::Error::AdapterNotFound => e
     session[:error] = "#{e.message} \n Maybe you need install the database driver gem first.\n We suggest you read the 'Gemfile' of 'ruby-db-admin'.\n Then you will know how to install the driver gem."
   rescue Exception => e
     session[:error] = e.message
   end
 
-  redirect '/'
+  redirect '/home'
 end
+
+get '/switch_db/:i' do
+  begin
+    DB = DBs[params[:i].to_i] if DBs[params[:i].to_i].test_connection
+  rescue Exception => e
+    session[:error] = e.message
+  end
+
+  redirect '/home'
+end
+
 
 post '/tables/:table_name/insert_one' do
   content_type :json
@@ -131,17 +150,11 @@ helpers do
   end
 
   def database_adapter
-    # begin
-    #   if /{.*}/.match(DB.inspect)
-    #     adapter_hash[(db_hash[:adapter]).to_s]
-    #   else
-    #     adapter_hash[/^.*::Database: "(.*):\/\//.match(DB.inspect)[1]]
-    #   end
-    # rescue Exception => e
-    #   puts e.message
-    # end
-
     adapter_hash[DB.database_type]
+  end
+
+  def database_host
+    database_hash(DB)[:host]
   end
 
   def column_name_with_belongs_to(column_name)
@@ -221,6 +234,10 @@ helpers do
 
   def adapter_hash
     { :sqlite => 'SQLite', :postgres => 'PostgreSQL', :mysql2 => 'MySQL', :oracle => 'Oracle', :sqlanywhere => 'SQL Anywhere' }
+  end
+
+  def database_hash(db)
+    eval(/{.*}/.match(db.inspect)[0])
   end
 end
 

@@ -25,12 +25,16 @@
     <div class='container'>
       <div>
         <h1 title='Current database. Click to visit home page.'>
-          <a href='/'><%= database_adapter %> - <%= database_name %></a>
+          <a href='/home'><%= "#{database_adapter} - #{database_name}@#{database_host}" %></a>
         </h1>
       </div>
 
       <div class='row'>
         <div class='col-sm-2'>
+          <%= erb :_recent_databases %>
+
+          <hr>
+
           <div class='sidebar-module'>
             <h4>Tables</h4>
             <ol class='list-unstyled'>
@@ -39,7 +43,9 @@
               <% end %>
             </ol>
           </div>
+
           <hr>
+
           <div class='sidebar-module'>
             <h4>Views</h4>
             <ol class='list-unstyled'>

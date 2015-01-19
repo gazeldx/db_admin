@@ -1,0 +1,40 @@
+<%= notice_error %>
+
+<div>
+  <h2>Connect to another database</h2>
+
+  <form action='connect_another_db' method="post">
+    <select name='adapter'>
+      <% adapter_hash.each do |adapter_key, adapter_value| %>
+        <option value='<%= adapter_key %>' <%= 'selected' if database_adapter == adapter_value || adapter_key == params[:adapter] %>><%= adapter_value %></option>
+      <% end %>
+    </select>
+
+    <textarea name='connect_hash' cols='30' rows='5' class='form-control'><%= "host: '#{params[:host] || db_hash[:host] || '127.0.0.1' }'&#13;&#10;database: '#{params[:database] || db_hash[:database]}'&#13;&#10;user: '#{params[:user] || db_hash[:user]}'&#13;&#10;password: ''" %></textarea>
+
+    <button type='submit' class='btn btn-success'>Connect</button>
+    (You can also add 'port: ' to textarea.)
+  </form>
+  <br>
+</div>
+
+<div>
+  <h2>Usage</h2>
+  <b>Double click</b> to modify any column on the table pages.
+  <br>
+  <br>
+</div>
+
+<div>
+  <button type='button' class='btn btn-primary' onclick='show_sql_panel.call(this)'>Execute SQL</button>
+  <br>
+
+  <%= erb :_execute_sql %>
+
+  <br>
+  <br>
+  <br>
+  <br>
+</div>
+
+<a href='https://github.com/gazeldx/ruby-db-admin' target='_blank'>ruby-db-admin</a>@github

@@ -101,7 +101,7 @@
         },
         error: function(jqXHR) {
           var data = $.parseJSON(jqXHR.responseText);
-          $('#ul_belongs_to_' + data['rand_id']).html('id=3 not found in ' + data['table_name'] + ' !');
+          $('#ul_belongs_to_' + data['rand_id']).html('id=' + data['id'] + ' not found in ' + data['table_name'] + ' !');
           $('#ul_belongs_to_' + data['rand_id']).addClass('text-danger');
         }
       });

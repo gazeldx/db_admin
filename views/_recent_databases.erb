@@ -1,0 +1,8 @@
+<div class='sidebar-module'>
+  <h4>Recent Databases</h4>
+  <ol class='list-unstyled'>
+    <% DBs.reverse.each_with_index do |db, i| %>
+      <li title='<%= "#{database_hash(db)[:host]} #{adapter_hash[(db.database_type).to_sym]}" %>'><a href="/switch_db/<%= (DBs.size - 1) - i %>"><%= database_hash(db)[:database] %></a></li>
+    <% end %>
+  </ol>
+</div>
