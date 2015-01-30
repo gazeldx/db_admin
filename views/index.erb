@@ -1,82 +1,40 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset='utf-8'>
-  <meta name='viewport' content='width=device-width, initial-scale=1'>
-  <title>Database</title>
-  <link href='/css/bootstrap.min.css' rel='stylesheet'>
+<%= notice_error %>
 
-  <script src='/js/jquery.min.js'></script>
-  <script src='/js/bootstrap.min.js'></script>
+<div>
+  <h4>Connect to database</h4>
 
-  <style>
-    select, button {
-      margin-top: 5px;
-      margin-bottom: 5px;
-    }
+  <form action='connect_another_db' method="post">
+    <select name='adapter'>
+      <% adapter_hash.each do |adapter_key, adapter_value| %>
+        <option value='<%= adapter_key %>' <%= 'selected' if adapter_key == params[:adapter] %>><%= adapter_value %></option>
+      <% end %>
+    </select>
 
-    h1 a:link { color: #000000; }
-    h1 a:visited { color: #000000; }
-    h1 a:hover { color: #4666FF; }
-  </style>
-</head>
+    <textarea name='connect_hash' cols='30' rows='5' class='form-control'><%= "host: '#{params[:host] || '127.0.0.1' }'&#13;&#10;database: '#{params[:database]}'&#13;&#10;user: '#{params[:user]}'&#13;&#10;password: ''" %></textarea>
 
-<body>
-<div class='container'>
-  <div>
-    <h1>
-      <a href='/'>Ruby Database Admin</a>
-    </h1>
-  </div>
-
-  <div class='row'>
-    <div class='col-sm-2'>
-      <%= erb :_recent_databases %>
-    </div>
-
-    <div class='col-sm-10 blog-main'>
-      <%= notice_error %>
-
-      <div>
-        <h4>Connect to database</h4>
-
-        <form action='connect_another_db' method="post">
-          <select name='adapter'>
-            <% adapter_hash.each do |adapter_key, adapter_value| %>
-              <option value='<%= adapter_key %>' <%= 'selected' if adapter_key == params[:adapter] %>><%= adapter_value %></option>
-            <% end %>
-          </select>
-
-          <textarea name='connect_hash' cols='30' rows='5' class='form-control'><%= "host: '#{params[:host] || '127.0.0.1' }'&#13;&#10;database: '#{params[:database]}'&#13;&#10;user: '#{params[:user]}'&#13;&#10;password: ''" %></textarea>
-
-          <button type='submit' class='btn btn-success'>Connect</button>
-          (You can also add 'port: ' to textarea.)
-        </form>
-        <br>
-      </div>
-
-      <div>
-        <h4>Usage</h4>
-        <b>Double click</b> to modify any column on the table pages.
-        <br>
-        <br>
-      </div>
-
-      <div>
-        <button type='button' class='btn btn-primary' onclick='show_sql_panel.call(this)'>Execute SQL</button>
-        <br>
-
-        <%= erb :_execute_sql %>
-
-        <br>
-        <br>
-        <br>
-        <br>
-      </div>
-
-      <a href='https://github.com/gazeldx/ruby-db-admin' target='_blank'>ruby-db-admin</a>@github
-    </div>
-  </div>
+    <button type='submit' class='btn btn-success'>Connect</button>
+    (You can also add 'port: ' to textarea.)
+  </form>
+  <br>
 </div>
-</body>
-</html>
+
+<div>
+  <h4>Usage</h4>
+  <b>Double click</b> to modify any column on the table pages.
+  <br>
+  <br>
+</div>
+
+<div>
+  <button type='button' class='btn btn-primary' onclick='show_sql_panel.call(this)'>Execute SQL</button>
+  <br>
+
+  <%= erb :_execute_sql %>
+
+  <br>
+  <br>
+  <br>
+  <br>
+</div>
+
+<a href='https://github.com/gazeldx/ruby-db-admin' target='_blank'>ruby-db-admin</a>@github

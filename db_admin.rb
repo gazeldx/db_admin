@@ -1,7 +1,8 @@
+# TODO: Mysql name test.
 require 'sequel'
 require 'json'
 require 'sinatra'
-# require 'sinatra/reloader' if development? #NOTICE: For debug, you need uncomment this line and "gem 'sinatra-reloader'" in Gemfile.
+require 'sinatra/reloader' if development? #NOTICE: For debug, you need uncomment this line and "gem 'sinatra-reloader'" in Gemfile.
 
 DBs = []
 # DB = Sequel.sqlite('ruby_db_admin.db') # ./ruby_db_admin.db
@@ -13,7 +14,7 @@ set :bind, '0.0.0.0'
 enable :sessions
 
 get '/' do
-  erb :index, layout: :index
+  erb :index, layout: :layout_index
 end
 
 get '/home' do
@@ -42,7 +43,7 @@ post '/connect_another_db' do
     session[:error] = e.message
   end
 
-  redirect '/home'
+  redirect (session[:error] ? '/' : '/home')
 end
 
 get '/switch_db/:i' do
@@ -52,7 +53,7 @@ get '/switch_db/:i' do
     session[:error] = e.message
   end
 
-  redirect '/home'
+  redirect (session[:error] ? '/' : '/home')
 end
 
 
@@ -233,7 +234,7 @@ helpers do
   end
 
   def adapter_hash
-    { :sqlite => 'SQLite', :postgres => 'PostgreSQL', :mysql2 => 'MySQL', :oracle => 'Oracle', :sqlanywhere => 'SQL Anywhere' }
+    { :sqlite => 'SQLite', :postgres => 'PostgreSQL', :mysql => 'MySQL', :mysql2 => 'MySQL', :oracle => 'Oracle', :sqlanywhere => 'SQL Anywhere' }
   end
 
   def database_hash(db)
