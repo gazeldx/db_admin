@@ -1,0 +1,13 @@
+<%= notice_error %>
+
+<div class='panel panel-default'>
+  <div class='panel-heading'>
+    <h3 class='panel-title'>
+      <%= params[:sql] %>
+    </h3>
+  </div>
+
+  <%= erb :_table %>
+
+  <%= erb :_pagination %>
+</div>

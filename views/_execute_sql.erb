@@ -1,10 +1,10 @@
 <div id='sql_panel' style='display: none'>
-  Please input SQL below:
-  <br>
-  <textarea id='sql' cols='140' rows='4' class='form-control'></textarea>
-  <button type='button' class='btn btn-success' onclick='execute_sql()'>Execute</button>
-  <br>
-  We haven't support SELECT yet.
+  <form>
+    Please input SQL below:
+    <br>
+    <textarea id='sql' cols='140' rows='4' class='form-control'></textarea>
+    <button type='button' class='btn btn-success' onclick='execute_sql()'>Execute</button>
+  </form>
   <br>
   Examples:
   <br>
@@ -21,16 +21,44 @@
   }
 
   function execute_sql() {
-    $.ajax({
-      url: "/execute_sql",
-      data: 'sql=' + $('#sql').val(),
-      type: 'POST',
-      success: function(data) {
-        alert('Your SQL executed successfully. ' + (data['result'] == null ? '' : "\nThe result is " + data['result'] + '.'));
-      },
-      error: function(jqXHR) {
-        alert('SQL executed failed!\n' + $.parseJSON(jqXHR.responseText)['message']);
+    if ($.trim($('#sql').val().toLowerCase()).indexOf('select') == 0) {
+      post('/select_sql', {sql: $('#sql').val()});
+    } else {
+      $.ajax({
+        url: "/execute_sql",
+        data: 'sql=' + $('#sql').val(),
+        type: 'POST',
+        success: function(data) {
+          alert('Your SQL executed successfully. ' + (data['result'] == null ? '' : "\nThe result is " + data['result'] + '.'));
+        },
+        error: function(jqXHR) {
+          alert('SQL executed failed!\n' + $.parseJSON(jqXHR.responseText)['message']);
+        }
+      });
+    }
+  }
+
+  function post(path, params, method) {
+    method = method || "post"; // Set method to post by default if not specified.
+
+    // The rest of this code assumes you are not using a library.
+    // It can be made less wordy if you use one.
+    var form = document.createElement("form");
+    form.setAttribute("method", method);
+    form.setAttribute("action", path);
+
+    for(var key in params) {
+      if(params.hasOwnProperty(key)) {
+        var hiddenField = document.createElement("input");
+        hiddenField.setAttribute("type", "hidden");
+        hiddenField.setAttribute("name", key);
+        hiddenField.setAttribute("value", params[key]);
+
+        form.appendChild(hiddenField);
       }
-    });
+    }
+
+    document.body.appendChild(form);
+    form.submit();
   }
 </script>

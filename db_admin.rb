@@ -29,6 +29,13 @@ get '/tables/:table_name' do
   erb :table
 end
 
+post '/select_sql' do
+  @dataset = DB.fetch(params[:sql].gsub(';', '')).extension(:pagination)\
+               .paginate((params[:page] || 1).to_i, 1000, record_count=nil)
+
+  erb :select_sql
+end
+
 post '/connect_another_db' do
   begin
     another_db = Sequel.connect(connect_hash)
@@ -256,3 +263,7 @@ end
 def db_hash
   eval(/{.*}/.match(DB.inspect)[0])
 end
+
+# def select_sql?(sql)
+#   sql[0..5].upcase == 'SELECT'
+# end
