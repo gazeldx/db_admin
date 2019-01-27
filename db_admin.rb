@@ -1,7 +1,9 @@
 require 'sequel'
 require 'json'
 require 'sinatra'
-# require 'sinatra/reloader' if development? #NOTICE: For debug, you need uncomment this line and "gem 'sinatra-reloader'" in Gemfile.
+
+# NOTICE: For debugging, you need to uncomment this line and the line "gem 'sinatra-reloader'" in Gemfile.
+# require 'sinatra/reloader' if development?
 
 DBs = []
 # DB = Sequel.sqlite('ruby_db_admin.db') # ./ruby_db_admin.db
