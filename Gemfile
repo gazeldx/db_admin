@@ -8,7 +8,7 @@ gem 'sinatra'
 
 # Below is database driver gems.
 # gem 'sqlite3' # SQLite
-# gem 'pg' # PostgreSQL
+gem 'pg' # PostgreSQL
 # gem 'mysql2' # MySQL
 # gem 'ruby-oci8' # Oracle
 # gem 'sqlanywhere' # SQL Anywhere

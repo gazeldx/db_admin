@@ -2,6 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     mustermann (1.0.3)
+    pg (1.1.4)
     rack (2.0.6)
     rack-protection (2.0.5)
       rack
@@ -17,6 +18,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  pg
   sequel
   sinatra
 
