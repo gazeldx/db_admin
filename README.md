@@ -3,7 +3,11 @@ A Sequel and Sinatra project.
 
 Demo picture below. You can use it to manager multiple databases at the same time.
 
-![Demo picture](./public/demo.png)
+![Demo home](./public/demo_home.png)
+
+![Demo operations](./public/demo_oprations.png)
+
+![Demo hover](./public/demo_hover.png)
 
 ## Installation
 ~~~bash
