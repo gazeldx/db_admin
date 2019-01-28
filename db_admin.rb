@@ -9,6 +9,9 @@ DBs = []
 # DB = Sequel.sqlite('ruby_db_admin.db') # ./ruby_db_admin.db
 # DB = Sequel.connect({ adapter: 'postgres', user: 'user', password: '', host: 'host', port: 5432, database: 'database_name' }) # host can be IP or host_name.
 # DB = Sequel.connect({ adapter: 'mysql2',   user: 'user', password: '', host: 'host', database: 'database_name' }) # adapter can also be 'postgres', 'sqlite', 'oracle', 'sqlanywhere', 'db2', 'informix' etc. We will use default port if port is nil.
+DB = nil
+
+DBs << DB unless DB.nil?
 
 set :bind, '0.0.0.0'
 
