@@ -6,10 +6,27 @@ require 'sinatra'
 # require 'sinatra/reloader' if development?
 
 DBs = []
-# DB = Sequel.sqlite('ruby_db_admin.db') # ./ruby_db_admin.db
-# DB = Sequel.connect({ adapter: 'postgres', user: 'user', password: '', host: 'host', port: 5432, database: 'database_name' }) # host can be IP or host_name.
-# DB = Sequel.connect({ adapter: 'mysql2',   user: 'user', password: '', host: 'host', database: 'database_name' }) # adapter can also be 'postgres', 'sqlite', 'oracle', 'sqlanywhere', 'db2', 'informix' etc. We will use default port if port is nil.
 DB = nil
+
+# Below are direct connect examples. Try to uncomment a line to use it.
+
+# DB = Sequel.sqlite('sqlite_example.db') # Connect SQLite db located at './sqlite_example.db'.
+
+# Connect PostgreSQL.
+# DB = Sequel.connect({ adapter: 'postgres',
+#                       host: 'hostname_or_ip',
+#                       database: 'database_name',
+#                       user: 'user',
+#                       password: '',
+#                       port: 5432 })
+
+# 'adapter' can also be 'mysql2', 'postgres', 'sqlite', 'oracle', 'sqlanywhere', 'db2', 'informix', etc.
+# We will use default port if port is nil.
+# DB = Sequel.connect({ adapter: 'mysql2',
+#                       host: 'hostname_or_ip',
+#                       database: 'database_name',
+#                       user: 'user',
+#                       password: '' })
 
 DBs << DB unless DB.nil?
 

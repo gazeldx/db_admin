@@ -1,11 +1,36 @@
-# This file is used for create the database ./ruby_db_admin.db
+# This file is used for inserting some sample data into a testing database.
+# Please connect to your testing database first.
+# You can uncomment the line `DB = Sequel.connect`,
+# then run `ruby seeds.rb` to generate sample data.
+
 require 'sequel'
 
-RUBY_DB_ADMIN = Sequel.sqlite('ruby_db_admin.db')
+# Connect SQLite DB located at './sqlite_example.db'.
+# DB = Sequel.sqlite('sqlite_example.db')
 
-(1..12).to_a.each do |i|
-  RUBY_DB_ADMIN.drop_table "rubyist#{i}"
-  RUBY_DB_ADMIN.create_table "rubyist#{i}" do
+# Connect PostgreSQL DB.
+# DB = Sequel.connect({ adapter: 'postgres',
+#                       host: 'hostname_or_ip',
+#                       database: 'database_name',
+#                       user: 'user',
+#                       password: '',
+#                       port: 5432 })
+
+# Connect other DBs.
+# 'adapter' can also be 'mysql2', 'postgres', 'sqlite', 'oracle', 'sqlanywhere', 'db2', 'informix', etc.
+# We will use default port if port is nil.
+# DB = Sequel.connect({ adapter: 'mysql2',
+#                       host: 'hostname_or_ip',
+#                       database: 'database_name',
+#                       user: 'user',
+#                       password: '' })
+#
+rubyist_count = 12
+programmers_count = 50
+(1..rubyist_count).to_a.each do |i|
+  table_name = "rubyist#{i}".to_sym
+  DB.drop_table table_name if DB.table_exists?(table_name)
+  DB.create_table table_name do
     primary_key :id
     String :name
     String :code
@@ -13,22 +38,23 @@ RUBY_DB_ADMIN = Sequel.sqlite('ruby_db_admin.db')
   end
 end
 
-(1..50).to_a.each do |i|
-  RUBY_DB_ADMIN.drop_table "programmers#{i}"
-  RUBY_DB_ADMIN.create_table "programmers#{i}" do
+(1..programmers_count).to_a.each do |i|
+  table_name = "programmers#{i}".to_sym
+  DB.drop_table table_name if DB.table_exists?(table_name)
+  DB.create_table table_name do
     primary_key :id
     String :name
     String :skill
     Integer :years
-    (1..12).to_a.each do |j|
+    (1..rubyist_count).to_a.each do |j|
       Integer "rubyist#{j}_id"
     end
   end
 end
 
-(1..12).to_a.each do |i|
-  items = RUBY_DB_ADMIN["rubyist#{i}".to_sym]
-  12.times do
+(1..rubyist_count).to_a.each do |i|
+  items = DB["rubyist#{i}".to_sym]
+  rubyist_count.times do
     n = (1..99).to_a.sample
     items.insert(name: "约翰-麦卡锡#{n}", code: "rb_#{n}", age: (11..39).to_a.sample)
     items.insert(name: "Guido van Rossum#{n}", code: "rb_#{n}", age: (11..39).to_a.sample)
@@ -40,12 +66,12 @@ end
   end
 end
 
-(1..50).to_a.each do |i|
-  items = RUBY_DB_ADMIN["programmers#{i}".to_sym]
+(1..programmers_count).to_a.each do |i|
+  items = DB["programmers#{i}".to_sym]
   (1..2).to_a.sample.times do
     h = {}
-    (1..12).to_a.each do |j|
-      h.merge!("rubyist#{j}_id" => (1..12).to_a.sample)
+    (1..rubyist_count).to_a.each do |j|
+      h.merge!("rubyist#{j}_id" => (1..rubyist_count).to_a.sample)
     end
 
     items.insert({ name: "Nolan#{(1..100).to_a.sample}", skill: "Rails", years: (1..25).to_a.sample }.merge(h))
