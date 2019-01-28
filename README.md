@@ -18,7 +18,7 @@ $ cd ruby-db-admin
 Read [Gemfile](./Gemfile) to install your database driver gem. Then
 ~~~bash
 $ bundle install
-$ ruby db_admin.rb #Or you can run it as daemon by `$ nohup ruby db_admin.rb &`
+$ ruby db_admin.rb # Run the Sinatra Web App. You can also run it as daemon: `$ nohup ruby db_admin.rb &`
 ~~~
 Visit [http://localhost:4567](http://localhost:4567/)
 
