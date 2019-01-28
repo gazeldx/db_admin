@@ -45,8 +45,8 @@ post '/connect_another_db' do
       DB = another_db
       DBs << DB
     end
-  rescue Sequel::Error::AdapterNotFound => e
-    session[:error] = "#{e.message} \n Maybe you need install the database driver gem first.\n We suggest you read the 'Gemfile' of 'ruby-db-admin'.\n Then you will know how to install the driver gem."
+  rescue Sequel::AdapterNotFound => e
+    session[:error] = "#{e.message} \n You need to install the database driver gem first.\n Please uncomment the driver gem in 'Gemfile' and run `$ bundle install`."
   rescue Exception => e
     session[:error] = e.message
   end
