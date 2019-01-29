@@ -15,7 +15,12 @@ Here are some Demo pictures.
 ~~~bash
 $ gem install db_admin
 ~~~
-Or add `gem 'db_admin'` to `Gemfile` and run `$ bundle install`.
+Or add `gem 'db_admin'` to your `Gemfile` and then run `$ bundle install`.
+~~~ruby
+group :development do 
+  gem 'db_admin'
+end
+~~~
 
 Make sure you have installed database driver gem. E.g: in `Gemfile`
 ~~~ruby
