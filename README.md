@@ -1,7 +1,7 @@
 ## Ruby Database Admin
 A Sequel and Sinatra project.
 
-Demo picture below. You can use it to manager multiple databases at the same time.
+Demo picture below. You can use it to manage multiple databases at the same time.
 
 ![Demo home](./public/demo_home.png)
 
