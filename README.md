@@ -1,7 +1,9 @@
 ## Ruby Database Admin
 A Sequel and Sinatra project.
 
-Demo picture below. You can use it to manage multiple databases at the same time.
+You can use it to manage multiple databases at the same time.
+
+Here are some Demo pictures.
 
 ![Demo home](./public/demo_home.png)
 
@@ -11,23 +13,21 @@ Demo picture below. You can use it to manage multiple databases at the same time
 
 ## Installation
 ~~~bash
-$ git clone git@github.com:gazeldx/ruby-db-admin.git
-$ cd ruby-db-admin
+$ gem install db_admin
+~~~
+Or add `gem 'db_admin'` to `Gemfile` and run `$ bundle install`.
+
+Make sure you have installed database driver gem. E.g:
+~~~bash
+gem 'sqlite3' # SQLite
+gem 'pg' # PostgreSQL
+gem 'mysql2' # MySQL
 ~~~
 
-Read [Gemfile](./Gemfile) to install your database driver gem. Then
 ~~~bash
-$ bundle install
-$ ruby db_admin.rb # Run the Sinatra Web App. You can also run it as daemon: `$ nohup ruby db_admin.rb &`
+$ db_admin # Run this command will start a sinatra Web.
 ~~~
 Visit [http://localhost:4567](http://localhost:4567/)
 
 ## Contributing
-
 Improving ruby-db-admin, please clone and pull requests! We love you do it.
-
-## License
-
-[MIT license](http://www.opensource.org/licenses/MIT).
-
-TODOs at [WIKI](https://github.com/gazeldx/ruby-db-admin/wiki).
