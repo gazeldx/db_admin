@@ -5,11 +5,11 @@ You can use it to manage multiple databases at the same time.
 
 Here are some Demo pictures.
 
-![Demo home](./public/demo_home.png)
+![Demo home](./lib/public/demo_home.png)
 
-![Demo operations](./public/demo_oprations.png)
+![Demo operations](./lib/public/demo_oprations.png)
 
-![Demo hover](./public/demo_hover.png)
+![Demo hover](./lib/public/demo_hover.png)
 
 ## Installation
 ~~~bash
@@ -17,8 +17,8 @@ $ gem install db_admin
 ~~~
 Or add `gem 'db_admin'` to `Gemfile` and run `$ bundle install`.
 
-Make sure you have installed database driver gem. E.g:
-~~~bash
+Make sure you have installed database driver gem. E.g: in `Gemfile`
+~~~ruby
 gem 'sqlite3' # SQLite
 gem 'pg' # PostgreSQL
 gem 'mysql2' # MySQL
