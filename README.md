@@ -1,9 +1,9 @@
 ## Ruby Database Admin
-A Sequel and Sinatra project.
+A gem based on [Sinatra](https://github.com/sinatra/sinatra) and [Sequel](https://github.com/jeremyevans/sequel).
 
 You can use it to manage multiple databases at the same time.
 
-Here are some Demo pictures.
+Here are some demo pictures.
 
 ![Demo home](./lib/public/demo_home.png)
 
@@ -22,15 +22,12 @@ group :development do
 end
 ~~~
 
-Make sure you have installed database driver gem. E.g: in `Gemfile`
-~~~ruby
-gem 'sqlite3' # SQLite
-gem 'pg' # PostgreSQL
-gem 'mysql2' # MySQL
-~~~
+Make sure you have installed database driver gem.
+
+E.g: `gem install pg`, `gem install sqlite3` or `gem install mysql2`, etc.
 
 ~~~bash
-$ db_admin # Run this command will start a sinatra Web.
+$ db_admin # Run this command to start a Sinatra Web.
 ~~~
 Visit [http://localhost:4567](http://localhost:4567/)
 
