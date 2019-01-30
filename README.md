@@ -1,13 +1,12 @@
 ## Ruby Database Admin
 A gem based on [Sinatra](https://github.com/sinatra/sinatra) and [Sequel](https://github.com/jeremyevans/sequel).
-
 You can use it to manage multiple databases at the same time.
 
 Rails user can also use it because it is just a gem. Here are some demo pictures.
 
 ![Demo home](./lib/public/demo_home.png)
 
-![Demo operations](./lib/public/demo_oprations.png)
+![Demo operations](./lib/public/demo_operations.png)
 
 ![Demo hover](./lib/public/demo_hover.png)
 
@@ -41,6 +40,8 @@ $ ruby db_admin/lib/db_admin.rb # Then visit http://localhost:4567
 ~~~
 
 ### Debugging
+You need to restart Web Server when you made a change. 
+
 Uncomment the below line in `db_admin/lib/db_admin.rb` to auto-reload changed files.
 ~~~ruby
 require 'sinatra/reloader' if development? # `gem install sinatra-reloader` first. 
