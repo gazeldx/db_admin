@@ -3,7 +3,7 @@ A gem based on [Sinatra](https://github.com/sinatra/sinatra) and [Sequel](https:
 
 You can use it to manage multiple databases at the same time.
 
-Here are some demo pictures.
+Rails user can also use it because it is just a gem. Here are some demo pictures.
 
 ![Demo home](./lib/public/demo_home.png)
 

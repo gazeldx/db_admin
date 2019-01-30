@@ -5,6 +5,8 @@ require 'json'
 class RubyDatabaseAdmin < Sinatra::Base
   # require 'sinatra/reloader' if development? # `gem install sinatra-reloader` first if you want to debug this project by auto-reloading changed files.
 
+  use Rack::MethodOverride
+
   DBs = []
   DB = nil
 
