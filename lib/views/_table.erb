@@ -12,11 +12,12 @@
 
   <tbody>
   <% @dataset.each_with_index do |row, row_num| %>
-    <tr id='tr<%= row_num %>' onmouseover='show_delete_button.call(this)' onmouseout='hide_delete_button.call(this)'>
+    <tr id='tr<%= row_num %>' onmouseover='show_operate_buttons.call(this)' onmouseout='hide_operate_buttons.call(this)'>
       <% @dataset.columns.each_with_index do |column, column_num| %>
         <% if column_num == 0 && row[:id] %>
-          <td width='40px' id='<%= row[:id] %>'>
+          <td width='50px' id='<%= row[:id] %>'>
             <a href='#_' onclick='delete_this_row.call(this)' style='display: none' title='Delete this row' data-url=<%= "/tables/#{params[:table_name]}/delete_one/#{row[:id]}" %>>Del</a>
+            <a href='#_' onclick='edit_this_row.call(this)' style='display: none' title='Edit this row'>Edit</a>
           </td>
         <% end %>
 
@@ -37,11 +38,21 @@
 
   <script>
     $('.table').on('dblclick', 'span', function() {
-      $(this).closest('td').find('span').hide();
-      $(this).closest('td').find(':text').show();
-      $(this).closest('td').find(':text').select();
-      $(this).closest('td').find('a').show();
+      show_column_editer($(this).closest('td'));
     });
+
+    function edit_this_row() {
+      $(this).closest('tr').find('td').each(function () {
+        show_column_editer($(this));
+      });
+    }
+
+    function show_column_editer(td) {
+      td.find('span').hide();
+      td.find(':text').show();
+      td.find(':text').select();
+      td.find('a').show();
+    }
 
     function save_this_data() {
       $.ajax({
@@ -74,11 +85,11 @@
       });
     }
 
-    function show_delete_button() {
+    function show_operate_buttons() {
       $(this).find('td:first a').show();
     }
 
-    function hide_delete_button() {
+    function hide_operate_buttons() {
       $(this).find('td:first a').hide();
     }
 
