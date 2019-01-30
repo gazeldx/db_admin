@@ -15,7 +15,7 @@ Here are some demo pictures.
 ~~~bash
 $ gem install db_admin
 ~~~
-Or add to `Gemfile`, then `$ bundle install`.
+Or add `gem 'db_admin'` to `Gemfile`, then `$ bundle install`.
 ~~~ruby
 group :development do 
   # A Web UI for database admin. Run `$ db_admin` and then
@@ -33,5 +33,15 @@ $ db_admin # Run this command to start a Sinatra Web.
 ~~~
 Visit [http://localhost:4567](http://localhost:4567/)
 
-## Contributing
-Improving ruby-db-admin, please clone and pull requests! We love you do it.
+## Customizing
+If you want to change some code for your own purpose, please
+~~~bash
+$ git clone git@github.com:gazeldx/db_admin.git
+$ ruby db_admin/lib/db_admin.rb # Then visit http://localhost:4567 
+~~~
+
+### Debugging
+Uncomment the below line in `db_admin/lib/db_admin.rb` to auto-reload changed files.
+~~~ruby
+require 'sinatra/reloader' if development? # `gem install sinatra-reloader` first. 
+~~~
