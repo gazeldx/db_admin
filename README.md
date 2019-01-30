@@ -15,9 +15,11 @@ Here are some demo pictures.
 ~~~bash
 $ gem install db_admin
 ~~~
-Or add `gem 'db_admin'` to your `Gemfile` and then run `$ bundle install`.
+Or add to `Gemfile`, then `$ bundle install`.
 ~~~ruby
 group :development do 
+  # A Web UI for database admin. Run `$ db_admin` and then
+  # visit http://localhost:4567
   gem 'db_admin'
 end
 ~~~
