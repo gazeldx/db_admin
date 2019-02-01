@@ -3,28 +3,15 @@ require 'sequel'
 require 'json'
 
 class RubyDatabaseAdmin < Sinatra::Base
-  # require 'sinatra/reloader' if development? # `gem install sinatra-reloader` first if you want to debug this project by auto-reloading changed files.
+  # require 'sinatra/reloader' if development? # `$ gem install sinatra-reloader` first if you want to debug this project by auto-reloading changed files.
 
   use Rack::MethodOverride
 
   DBs = []
   DB = nil
 
-  # Below are direct connect examples. Try to uncomment a line to use it.
-  #
-  # DB = Sequel.sqlite('sqlite_example.db') # Connect SQLite db located at './sqlite_example.db'.
-  #
-  # Connect PostgreSQL.
+  # 'adapter' can be 'postgres', 'mysql2', 'sqlite', 'oracle', etc.
   # DB = Sequel.connect({ adapter: 'postgres',
-  #                       host: 'hostname_or_ip',
-  #                       database: 'database_name',
-  #                       user: 'user',
-  #                       password: '',
-  #                       port: 5432 })
-  #
-  # 'adapter' can also be 'mysql2', 'postgres', 'sqlite', 'oracle', 'sqlanywhere', 'db2', 'informix', etc.
-  # We will use default port if port is nil.
-  # DB = Sequel.connect({ adapter: 'mysql2',
   #                       host: 'hostname_or_ip',
   #                       database: 'database_name',
   #                       user: 'user',
@@ -80,7 +67,9 @@ class RubyDatabaseAdmin < Sinatra::Base
 
   get '/switch_db/:i' do
     begin
-      DB = DBs[params[:i].to_i] if DBs[params[:i].to_i].test_connection
+      if should_switch_db?(DBs[params[:i].to_i])
+        DB = DBs[params[:i].to_i]
+      end
     rescue Exception => e
       session[:error] = e.message
     end
@@ -295,9 +284,9 @@ class RubyDatabaseAdmin < Sinatra::Base
     eval(/{.*}/.match(DB.inspect)[0])
   end
 
-  # def select_sql?(sql)
-  #   sql[0..5].upcase == 'SELECT'
-  # end
+  def should_switch_db?(new_db)
+    new_db.test_connection && new_db != DB
+  end
 end
 
 RubyDatabaseAdmin.run!
