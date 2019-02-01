@@ -14,12 +14,12 @@ Rails user can also use it because it is just a gem. Here are some demo pictures
 ~~~bash
 $ gem install db_admin
 ~~~
-Or add `gem 'db_admin'` to `Gemfile`, then `$ bundle install`.
+Or modify `Gemfile` as below, then `$ bundle install`.
 ~~~ruby
 group :development do 
   # A Web UI for database admin. Run `$ db_admin` and then
   # visit http://localhost:4567
-  gem 'db_admin'
+  gem 'db_admin', require: false
 end
 ~~~
 
@@ -42,7 +42,7 @@ $ ruby db_admin/lib/db_admin.rb # Then visit http://localhost:4567
 ### Debugging
 You need to restart Web Server when you made a change. 
 
-Uncomment the below line in `db_admin/lib/db_admin.rb` to auto-reload changed files.
+Uncomment the below line in `./lib/db_admin.rb` to auto-reload changed files.
 ~~~ruby
-require 'sinatra/reloader' if development? # `gem install sinatra-reloader` first. 
+require 'sinatra/reloader' if development? # `$ gem install sinatra-reloader` first. 
 ~~~
