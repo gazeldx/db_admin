@@ -9,16 +9,13 @@ module DBAdmin
     use Rack::MethodOverride
 
     DBs = []
-    DB = nil
 
     # Direct connect. 'adapter' can be 'postgres', 'mysql2', 'sqlite', 'oracle', etc.
     # DB = Sequel.connect({ adapter: 'postgres',
     #                       host: 'hostname_or_ip',
     #                       database: 'database_name',
     #                       user: 'user',
-    #                       password: '' })
-
-    DBs << DB unless DB.nil?
+    #                       password: '' }); DBs << DB
 
     set :bind, '0.0.0.0'
 

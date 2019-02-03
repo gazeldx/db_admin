@@ -1,6 +1,6 @@
 Gem::Specification.new do |gem|
   gem.name = 'db_admin'
-  gem.version = '0.1.4'
+  gem.version = '0.1.5'
   gem.date = '2019-02-03'
   gem.summary = 'A Web UI for database admin!'
   gem.description = 'A Web UI to manage databases. Support PostgreSQL, MySQL, SQLite, Oracle, MS-SQL, etc.'

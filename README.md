@@ -11,7 +11,7 @@ Rails user can also use it because it is just a gem. Here are some demo pictures
 ![Demo hover](./lib/public/demo_hover.png)
 
 ## Installation
-**The best way to use this gem is `gem install db_admin`**.
+**The best way** to use this gem is **`gem install db_admin`**.
 
 If you prefer to use it in `Gemfile`:
 ~~~ruby
