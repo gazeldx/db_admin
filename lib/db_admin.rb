@@ -18,7 +18,7 @@ module DBAdmin
 
       db_hash = db_hash['development'] if db_hash['development'].is_a?(Hash)
 
-      return {} if ['adapter', 'host', 'database'].any? { |item| db_hash[item].to_s.empty? }
+      return {} if ['adapter', 'database'].any? { |item| db_hash[item].to_s.empty? }
 
       return db_hash
         .slice('adapter', 'host', 'database', 'username', 'password', 'encoding', 'port')
