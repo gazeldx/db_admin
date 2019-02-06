@@ -2,4 +2,29 @@
 
 require 'db_admin'
 
+module DBAdmin
+  class Web
+    yml_hash = database_config_yml_hash
+
+    unless yml_hash.empty?
+      begin
+        db = Sequel.connect(yml_hash)
+
+        if db.test_connection
+          DB = db
+          DBs << DB
+          puts "==== Connect to the database defined in your config file './config/database.yml' or './database.yml' succeed."
+        end
+      rescue Sequel::AdapterNotFound => e
+        puts "==== Warning: An exception occurred when trying to connect to the database defined in your config file './config/database.yml' or './database.yml' \n" +
+             "====   #{e.message} \n" +
+             "====   You need to install the database driver gem first"
+      rescue Exception => e
+        puts "==== Warning: An exception occurred when trying to connect to the database defined in your config file './config/database.yml' or './database.yml' \n" +
+             "====   #{e.message}"
+      end
+    end
+  end
+end
+
 DBAdmin::Web.run!

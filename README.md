@@ -2,7 +2,9 @@
 A gem based on [Sinatra](https://github.com/sinatra/sinatra) and [Sequel](https://github.com/jeremyevans/sequel).
 You can use it to manage multiple databases at the same time.
 
-Rails user can also use it because it is just a gem. Here are some demo pictures.
+For Rails user, this gem will treat `./config/database.yml` as database configuration file.
+
+Here are some demo pictures.
 
 ![Demo home](./lib/public/demo_home.png)
 
@@ -11,14 +13,15 @@ Rails user can also use it because it is just a gem. Here are some demo pictures
 ![Demo hover](./lib/public/demo_hover.png)
 
 ## Installation
-**The best way** to use this gem is **`gem install db_admin`**.
-
+~~~ruby
+gem install db_admin
+~~~
 If you prefer to use it in `Gemfile`:
 ~~~ruby
 group :development do
   # A Web UI for database admin. Run `$ db_admin` and then
   # visit http://localhost:4567
-  gem 'db_admin', require: false # Don't require the code because you needn't it.
+  gem 'db_admin', require: false # You needn't require the code.
 end
 ~~~
 
@@ -30,6 +33,49 @@ E.g: `gem install pg`, `gem install sqlite3` or `gem install mysql2`, etc.
 $ db_admin # Run this command to start a Sinatra Web.
 ~~~
 Visit [http://localhost:4567](http://localhost:4567/)
+
+### Connect to database
+There are two ways for you to connect to a database.
+
+1) Visit [http://localhost:4567](http://localhost:4567/) . The homepage is asking you to connect to a database. Please look at the demo picture above.
+
+2) `touch ./config/database.yml` or `touch ./database.yml`
+
+You can use Rails's `database.yml` file directly.
+
+In yaml, 'Omit the key' or 'keep value blank' means use the default value.
+~~~yaml
+# 'database.yml' for Rails style example 1. We only connect to the 'development' database!
+development:
+  adapter: postgresql
+  encoding: unicode
+  host: localhost
+  database: somthing_development
+  username: username
+  password:
+  port: 5432
+~~~
+~~~yaml
+# 'database.yml' for Rails style example 2. Inherited style is also supported.
+default: &default
+  adapter: postgresql
+  # Below omitted ...
+
+development:
+  <<: *default
+  database: somthing_development
+  # Below omitted ...
+~~~
+~~~yaml
+# 'database.yml' for none-Rails style example.
+adapter: postgres
+encoding: unicode
+host: localhost
+database: your_database_name
+user: username
+password:
+port: 5432
+~~~
 
 ## Customizing
 If you want to change some code for your own purpose, please

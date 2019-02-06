@@ -5,7 +5,7 @@ module DBAdmin
     # Uncomment the line below to direct connect to a database.
     # DB = Sequel.connect({ adapter: 'postgres', # 'adapter' can be 'postgres', 'mysql2', 'sqlite', 'oracle', etc.
     #                       host: 'hostname_or_ip',
-    #                       database: 'database_name',
+    #                       database: 'your_database_name',
     #                       user: 'user',
     #                       password: '' }); DBs << DB
   end

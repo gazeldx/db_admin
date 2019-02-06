@@ -10,12 +10,54 @@ module DBAdmin
 
     DBs = []
 
+    # Load Rails './config/database.yml' or './database.yml'
+    def self.database_config_yml_hash
+      db_hash = load_database_yml
+
+      return {} if db_hash.empty?
+
+      db_hash = db_hash['development'] if db_hash['development'].is_a?(Hash)
+
+      return {} if ['adapter', 'host', 'database'].any? { |item| db_hash[item].to_s.empty? }
+
+      return db_hash
+        .slice('adapter', 'host', 'database', 'username', 'password', 'encoding', 'port')
+        .transform_keys { |key| key == 'username' ? :user : key.to_sym }
+        .transform_values { |value| convert_rails_adapter(value) }
+    end
+
+    def self.load_database_yml
+      require 'yaml'
+
+      begin
+        YAML.load_file('config/database.yml')
+      rescue Errno::ENOENT
+        begin
+          YAML.load_file('database.yml')
+        rescue Errno::ENOENT
+          {}
+        end
+      end
+    end
+
+    def self.convert_rails_adapter(adapter)
+      hash = { 'postgresql' => 'postgres', 'sqlite3' => 'sqlite', 'sqlserver' => 'tinytds' }
+
+      return hash[adapter] if hash.keys.include?(adapter)
+
+      return adapter
+    end
+
     set :bind, '0.0.0.0'
 
     enable :sessions
 
     get '/' do
-      erb :index, layout: :layout_index
+      if DBs.size > 0
+        erb :home
+      else
+        erb :index, layout: :layout_index
+      end
     end
 
     get '/home' do
@@ -48,7 +90,7 @@ module DBAdmin
           DBs << DB
         end
       rescue Sequel::AdapterNotFound => e
-        session[:error] = "#{e.message} \n You need to install the database driver gem first.\n Please uncomment the driver gem in 'Gemfile' and run `$ bundle install`."
+        session[:error] = "#{e.message} \n You need to install the database driver gem first."
       rescue Exception => e
         session[:error] = e.message
       end

@@ -1,43 +1,43 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset='utf-8'>
-  <meta name='viewport' content='width=device-width, initial-scale=1'>
-  <title>Database</title>
-  <link href='/css/bootstrap.min.css' rel='stylesheet'>
+  <head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <title>Database</title>
+    <link href='/css/bootstrap.min.css' rel='stylesheet'>
 
-  <script src='/js/jquery.min.js'></script>
-  <script src='/js/bootstrap.min.js'></script>
+    <script src='/js/jquery.min.js'></script>
+    <script src='/js/bootstrap.min.js'></script>
 
-  <style>
-    select, button {
-      margin-top: 5px;
-      margin-bottom: 5px;
-    }
+    <style>
+      select, button {
+        margin-top: 5px;
+        margin-bottom: 5px;
+      }
 
-    h1 a:link { color: #000000; }
-    h1 a:visited { color: #000000; }
-    h1 a:hover { color: #4666FF; }
-  </style>
-</head>
+      h1 a:link { color: #000000; }
+      h1 a:visited { color: #000000; }
+      h1 a:hover { color: #4666FF; }
+    </style>
+  </head>
 
-<body>
-<div class='container'>
-  <div>
-    <h1>
-      <a href='/'>Ruby Database Admin</a>
-    </h1>
-  </div>
+  <body>
+    <div class='container'>
+      <div>
+        <h1>
+          <a href='/'>Ruby Database Admin</a>
+        </h1>
+      </div>
 
-  <div class='row'>
-    <div class='col-sm-2'>
-      <%= erb :_recent_databases %>
+      <div class='row'>
+        <div class='col-sm-2'>
+          <%= erb :_recent_databases %>
+        </div>
+
+        <div class='col-sm-10 blog-main'>
+          <%= yield %>
+        </div>
+      </div>
     </div>
-
-    <div class='col-sm-10 blog-main'>
-      <%= yield %>
-    </div>
-  </div>
-</div>
-</body>
+  </body>
 </html>
