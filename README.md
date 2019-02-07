@@ -21,13 +21,13 @@ If you prefer to use it in `Gemfile`:
 group :development do
   # A Web UI for database admin. Run `$ db_admin` and then
   # visit http://localhost:4567
-  gem 'db_admin', require: false # You needn't require the code.
+  gem 'db_admin', require: false # You needn't to require the code.
 end
 ~~~
 
 Make sure you have installed database driver gem.
 
-E.g: `gem install pg`, `gem install sqlite3` or `gem install mysql2`, etc.
+E.g: `gem install pg`, `gem install sqlite3` or `gem install mysql2`, etc. Then
 
 ~~~bash
 $ db_admin # Run this command to start a Sinatra Web.
@@ -37,20 +37,20 @@ Visit [http://localhost:4567](http://localhost:4567/)
 ### Connect to database
 There are two ways for you to connect to a database.
 
-1) Visit [http://localhost:4567](http://localhost:4567/) . The homepage is asking you to connect to a database. Please look at the demo picture above.
+1) Visit [http://localhost:4567](http://localhost:4567/) . The homepage will ask you to connect to a database. Please look at the demo picture above.
 
 2) `touch ./config/database.yml` or `touch ./database.yml`
 
 You can use Rails's `database.yml` file directly.
 
-In yaml, 'Omit the key' or 'keep value blank' means use the default value.
+In `database.yml`, 'Omit the key' or 'keep the value blank' means use the default value.
 ~~~yaml
 # 'database.yml' for Rails style example 1. We only connect to the 'development' database!
 development:
   adapter: postgresql
   encoding: unicode
   host: localhost
-  database: somthing_development
+  database: something_development
   username: username
   password:
   port: 5432
@@ -63,7 +63,7 @@ default: &default
 
 development:
   <<: *default
-  database: somthing_development
+  database: something_development
   # Below omitted ...
 ~~~
 ~~~yaml
